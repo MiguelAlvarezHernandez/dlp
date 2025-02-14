@@ -4,7 +4,7 @@ import parser.*;
 
 import org.antlr.v4.runtime.*;
 
-public class LexerTest {
+public class LexerText {
 
 	public static void main(String... args) throws Exception {
 
@@ -60,5 +60,6 @@ public class LexerTest {
 			new LexicalInfo(23, 18, "'~'", CmmLexer.CHAR_CONSTANT, '~'),
 			new LexicalInfo(24, 2, "'\\n'", CmmLexer.CHAR_CONSTANT, '\n'),
 			new LexicalInfo(24, 7, "'\\t'", CmmLexer.CHAR_CONSTANT, '\t'),
-			new LexicalInfo(25, 2, "'\\126'", CmmLexer.CHAR_CONSTANT, '~'), };
+			new LexicalInfo(25, 2, "'\\126'", CmmLexer.CHAR_CONSTANT, '~'),
+	};
 }

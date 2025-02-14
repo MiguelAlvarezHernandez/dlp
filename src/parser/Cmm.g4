@@ -1,6 +1,6 @@
 grammar Cmm;	
 
-program: (WS | INT_CONSTANT | REAL_CONSTANT | CHAR_CONSTANT | ID | ONE_LINE_COMMENT | ML_COMMENT)+;
+program: (WS | INT_CONSTANT | REAL_CONSTANT | CHAR_CONSTANT | ID | ONE_LINE_COMMENT | ML_COMMENT)* EOF;
 
   		 
 INT_CONSTANT: [1-9] [0-9]*
@@ -13,7 +13,7 @@ CHAR_CONSTANT: '\'' . '\''
              | '\'' '\\' [nt] '\''
              ;
 
-ONE_LINE_COMMENT: '//' (~[\n])*
+ONE_LINE_COMMENT: '//' (~[\n])* -> skip
                 ;
 REAL_CONSTANT: INT_CONSTANT+ '.' INT_CONSTANT*
              | INT_CONSTANT* '.' INT_CONSTANT+
@@ -21,6 +21,7 @@ REAL_CONSTANT: INT_CONSTANT+ '.' INT_CONSTANT*
              | INT_CONSTANT+ '.' INT_CONSTANT* [eE] [-+]? INT_CONSTANT+ // Ejemplo: 34.12E-3, 2.e23
              | INT_CONSTANT* '.' INT_CONSTANT+ [eE] [-+]? INT_CONSTANT+ // Ejemplo: .3E+3, 3e3
              ;
-ML_COMMENT: '/*' .*? '*/'
+ML_COMMENT: '/*' .*? '*/' -> skip
           ;
 WS: [ \t\n\r]+ -> skip ;
+
