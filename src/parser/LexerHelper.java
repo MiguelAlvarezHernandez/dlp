@@ -37,6 +37,5 @@ public class LexerHelper {
 		return Double.NaN;
 	}
 
-	// TODO: Implement the lexemeToChar and lexemeToReal methods
 	
 }

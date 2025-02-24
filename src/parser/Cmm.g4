@@ -1,8 +1,6 @@
 grammar Cmm;	
 
-program: (WS | INT_CONSTANT | REAL_CONSTANT | CHAR_CONSTANT | ID | ONE_LINE_COMMENT | ML_COMMENT |expression|type)* EOF;
-
-
+program: (definition*) definition;
 
 expression: ID
           | INT_CONSTANT
@@ -11,8 +9,8 @@ expression: ID
           | function_invocation
           | '(' expression ')'
           | expression '[' expression ']'
-          | '.' expression
-          | '(' type ')' expression
+          | expression '.' ID
+          | '(' primitive_type ')' expression
           | '-' expression
           | '!' expression
           | expression ('*'|'/'|'%') expression
@@ -21,7 +19,7 @@ expression: ID
           | expression ('&&'|'||') expression
           ;
 
-function_invocation: ID '(' ( expression (','expression*) )? ')'
+function_invocation: ID '(' ( expression (','expression)* )? ')'
                    ;
 
 type: primitive_type
@@ -29,17 +27,18 @@ type: primitive_type
     | struct_type
     ;
 
-struct_type:  'struct' '{'record_field+| struct_type'}' ID
-            | 'struct' '{'struct_type'}' ID ';'
-           ;
+//struct_type:  'struct' '{'record_field+| struct_type'}' ID
+//            | 'struct' '{'struct_type'}' ID ';'
+//           ;
+struct_type: 'struct' '{' record_field+ '}' ;
 
 record_field: type ID ';'
             ;
 
 primitive_type: 'int'
-                | 'char'
-                | 'double'
-                ;
+              | 'char'
+              | 'double'
+              ;
 
 statement: 'write' expression (','expression)*';'
          | 'read' expression (','expression)*';'
@@ -47,19 +46,23 @@ statement: 'write' expression (','expression)*';'
          | expression '=' expression ';'
          | 'while' '(' expression ')' block
          | 'if' '(' expression ')' block ('else' block)?
-         | ID '(' expression ')'
+       //  | ID '(' expression ')' ';'
+         | function_invocation ';'
          ;
 
-block: statement ';'
+block: statement
 | '{' statement* '}'
 ;
 
-definition: var_definition ';'
-          | (primitive_type|'void') ID '('(primitive_type ID (',' primitive_type ID)*)?')'
-          '{' var_definition* statement*'}'
+definition: var_definition
+          | function_definition
           ;
 
-var_definition: primitive_type ID (',' ID)*;
+var_definition: type ID (',' ID)* ';';
+
+function_definition: (primitive_type | 'void') ID '(' parameter_list? ')' '{' var_definition* statement* '}';
+
+parameter_list: primitive_type ID (',' primitive_type ID)*;//type?
 
 INT_CONSTANT: [1-9] [0-9]*
             | '0'
