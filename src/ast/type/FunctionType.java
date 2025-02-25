@@ -1,0 +1,15 @@
+package ast.type;
+
+import ast.program.VariableDefinition;
+
+import java.util.List;
+
+public class FunctionType implements Type {
+    private Type returnType;
+    private List<VariableDefinition> parameterTypes;
+
+    public FunctionType(Type returnType, List<VariableDefinition> parameterTypes) {
+        this.returnType = returnType;
+        this.parameterTypes = parameterTypes;
+    }
+}

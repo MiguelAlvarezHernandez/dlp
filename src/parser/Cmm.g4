@@ -1,43 +1,69 @@
-grammar Cmm;	
+grammar Cmm;
 
-program: (definition*) definition;
+@header{
+    import ast.*;
+    import ast.expressions.*;
+    import ast.statements.*;
+    import ast.type.*;
+}
+program: definition* main_function;
 
-expression: ID
-          | INT_CONSTANT
-          | REAL_CONSTANT
-          | CHAR_CONSTANT
-          | function_invocation
+main_function: 'void' 'main' '(' ')' '{' var_definition* function_definition*'}';
+
+expression returns [Expression ast]:
+           ID {$ast = new VariableExpression($ID.getText(), $ID.getLine(), $ID.getCharPositionInLine()+1);}
+          | ic=INT_CONSTANT {$ast = new IntLiteralExpression($ic.getLine(),
+                                    $ic.getCharPositionInLine()+1 , LexerHelper.lexemeToInt($ic.getText()));}
+          | rc=REAL_CONSTANT {$ast = new RealLiteralExpression(LexerHelper.lexemeToReal($rc.getText()),$rc.getLine(), $rc.getCharPositionInLine()+1);}
+          | cc=CHAR_CONSTANT {$ast = new CharLiteralExpression(LexerHelper.lexemeToChar($cc.getText()),$cc.getLine(), $cc.getCharPositionInLine()+1);}
+          | fi=function_invocation
+          {$ast = $fi.ast;}
           | '(' expression ')'
-          | expression '[' expression ']'
-          | expression '.' ID
-          | '(' primitive_type ')' expression
-          | '-' expression
-          | '!' expression
+          | e1=expression '[' e2=expression ']'
+          {$ast = new IndexExpression($e1.ast, $e2.ast, $p1.getLine(), $p1.getCharPositionInLine()+1);}
+          | e1=expression '.' ID
+           {$ast = new FieldAccessExpression($e1.ast, $ID.text, $e1.ast.getLine(), $e1.ast.getColumn());}
+          | p1='(' t1=primitive_type p2=')' e1=expression
+          {$ast = new Cast($t1.ast, $e1.ast, $p1.getLine(), $p1.getCharPositionInLine()+1);}
+          | op='-' e1=expression
+          {$ast = new UnaryMinusExpression($e1.ast, $op.getLine(), $op.getCharPositionInLine()+1);}
+          | op='!' e1=expression
+          {$ast = new NegationExpression($e1.ast, $op.getLine(), $op.getCharPositionInLine()+1);}
           | expression ('*'|'/'|'%') expression
-          | expression ('+'|'-') expression
-          | expression ('>'|'>='|'<'|'<='|'!='|'==') expression
-          | expression ('&&'|'||') expression
+          {$ast = new ArithmeticExpression($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $op.text, $e2.ast);}
+          | e1=expression op=('+'|'-') e2=expression
+          {$ast = new ArithmeticExpression($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $op.text, $e2.ast);}
+          | e1=expression op=('>'|'>='|'<'|'<='|'!='|'==') e2=expression
+          {$ast = new RelationalExpression($e1.ast, $op.text, $e2.ast, $e1.ast.getLine(), $e1.ast.getColumn());}
+          | e1=expression op=('&&'|'||') e2=expression
+          {$ast = new LogicalExpression($e1.ast, $op.text, $e2.ast, $e1.ast.getLine(), $e1.ast.getColumn());}
           ;
 
-function_invocation: ID '(' ( expression (','expression)* )? ')'
+function_invocation returns  [FunctionInvocation ast]
+                    locals  [List<Expression> expressions = new ArrayList<>()]:
+                    ID '(' ( e2=expression{$expressions.add($e2.ast);} (','e3=expression{$expressions.add($e3.ast);})* )? ')'
+                    {$ast = new FunctionInvocation($ID.text, $expressions, $ID.getLine(), $ID.getCharPositionInLine()+1);}
                    ;
 
-type: primitive_type
-    | type '['INT_CONSTANT']'
-    | struct_type
+type returns [Type ast]: t1=primitive_type {$ast = $t1.ast;}
+    | t2=type '['ic=INT_CONSTANT']' {$ast = new ArrayType($t2.ast,LexerHelper.lexemeToInt($ic.getText()));}
+    | st=struct_type {$ast = $st.ast;}
     ;
 
 //struct_type:  'struct' '{'record_field+| struct_type'}' ID
 //            | 'struct' '{'struct_type'}' ID ';'
 //           ;
-struct_type: 'struct' '{' record_field+ '}' ;
+struct_type returns  [StructType ast]
+            locals  [List<RecordField> fields = new ArrayList<>()]:
+            'struct' '{' (rf=record_field{$fields.add($rf.ast);})+ '}'
+            {$ast = new StructType($fields);};
 
-record_field: type ID ';'
+record_field returns [RecordField ast]: t=type ID ';' {$ast = new RecordField($t.ast, $ID.text)}
             ;
 
-primitive_type: 'int'
-              | 'char'
-              | 'double'
+primitive_type returns [Type ast]: 'int' {$ast = new IntType();}
+              | 'char' {$ast = new CharType();}
+              | 'double' {$ast = new DoubleType();}
               ;
 
 statement: 'write' expression (','expression)*';'
