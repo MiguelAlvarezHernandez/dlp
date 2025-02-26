@@ -2,13 +2,16 @@ grammar Cmm;
 
 @header{
     import ast.*;
+    import ast.program.*;
     import ast.expressions.*;
     import ast.statements.*;
     import ast.type.*;
+
 }
+
 program: definition* main_function;
 
-main_function: 'void' 'main' '(' ')' '{' var_definition* function_definition*'}';
+main_function: 'void' 'main' '(' ')' '{' var_definition* statement*'}';
 
 expression returns [Expression ast]:
            ID {$ast = new VariableExpression($ID.getText(), $ID.getLine(), $ID.getCharPositionInLine()+1);}
@@ -58,7 +61,7 @@ struct_type returns  [StructType ast]
             'struct' '{' (rf=record_field{$fields.add($rf.ast);})+ '}'
             {$ast = new StructType($fields);};
 
-record_field returns [RecordField ast]: t=type ID ';' {$ast = new RecordField($t.ast, $ID.text)}
+record_field returns [RecordField ast]: t=type ID ';' {$ast = new RecordField($t.ast, $ID.text);}
             ;
 
 primitive_type returns [Type ast]: 'int' {$ast = new IntType();}
@@ -66,14 +69,20 @@ primitive_type returns [Type ast]: 'int' {$ast = new IntType();}
               | 'double' {$ast = new DoubleType();}
               ;
 
-statement: 'write' expression (','expression)*';'
-         | 'read' expression (','expression)*';'
-         | 'return' expression (','expression)*';'
-         | expression '=' expression ';'
+statement returns [Statement ast]
+    locals  [List<Expression> expressions = new ArrayList<>()]:
+         wo='write' e1=expression {$expressions.add($e1.ast);}(','e2=expression{$expressions.add($e2.ast);})*';'
+         {$ast = new WriteStatement($expressions,$wo.getLine(),$wo.getCharPositionInLine()+1);}
+         | wo='read' e1=expression {$expressions.add($e1.ast);} (',' e2=expression {$expressions.add($e2.ast);})* ';'
+         { $ast = new ReadStatement($expressions, $wo.getLine(), $wo.getCharPositionInLine() + 1); }
+         | 'return' expression (','expression)*';'//Una o varias?
+         | e1=expression '=' e2=expression ';'
+          { $ast = new AssignmentStatement($e1.ast, $e2.ast, $e1.ast.getLine(), $e1.ast.getColumn()); }
          | 'while' '(' expression ')' block
          | 'if' '(' expression ')' block ('else' block)?
        //  | ID '(' expression ')' ';'
-         | function_invocation ';'
+         | fi=function_invocation ';'
+         { $ast = $fi.ast;}
          ;
 
 block: statement
@@ -84,7 +93,10 @@ definition: var_definition
           | function_definition
           ;
 
-var_definition: type ID (',' ID)* ';';
+var_definition returns [VariableDefinition ast]: t2=type id1=ID (',' ID)* ';'
+                {$ast = new VariableDefinition($t2.ast, $id1.getText(), $id1.getLine(), $id1.getCharPositionInLine()+1);}
+                ;//cambiar
+
 
 function_definition: (primitive_type | 'void') ID '(' parameter_list? ')' '{' var_definition* statement* '}';
 

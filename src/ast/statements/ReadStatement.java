@@ -1,16 +1,19 @@
 package ast.statements;
 
 import ast.AbstractLocatable;
+import ast.expressions.Expression;
+
+import java.util.List;
 
 public class ReadStatement extends AbstractLocatable implements Statement {
-    private String variableName;
+    private List<Expression> valuesToRead;
 
-    public ReadStatement(String variableName, int line, int column) {
+    public ReadStatement(List<Expression> valuesToRead, int line, int column) {
         super(line, column);
-        this.variableName = variableName;
+        this.valuesToRead = valuesToRead;
     }
     @Override
     public String toString() {
-        return "Read " + variableName;
+        return "Read " + valuesToRead.toString();
     }
 }

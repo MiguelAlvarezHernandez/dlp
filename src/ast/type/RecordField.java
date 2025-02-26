@@ -2,19 +2,19 @@ package ast.type;
 
 public class RecordField {
     private Type fieldType;
-    private int size;
+    private String name;
 
-    public RecordField(Type fieldType, int size) {
+    public RecordField(Type fieldType, String name) {
         this.fieldType = fieldType;
-        this.size = size;
+        this.name = name;
     }
 
 
     public Type getFieldType() {
         return fieldType;
     }
-    public int getSize() {
-        return size;
+    public String getName() {
+        return name;
     }
 
 
