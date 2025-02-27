@@ -12,4 +12,13 @@ public class FunctionType implements Type {
         this.returnType = returnType;
         this.parameterTypes = parameterTypes;
     }
+
+    public Type getReturnType() {
+        return returnType;
+    }
+
+    public List<VariableDefinition> getParameterTypes() {
+
+        return parameterTypes;
+    }
 }

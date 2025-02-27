@@ -9,9 +9,21 @@ grammar Cmm;
 
 }
 
-program: definition* main_function;
+program returns [Program ast]
+           locals [List<Definition> definitions = new ArrayList<>()]:
+                (df1=definition{$definitions.add($df1.ast);})* df2=main_function{$definitions.add($df2.ast);}
+                {$ast = new Program($definitions);}
+                ;
 
-main_function: 'void' 'main' '(' ')' '{' var_definition* statement*'}';
+main_function returns [Definition ast]
+                    locals [List<VariableDefinition> parameters = new ArrayList<>(),
+                        FunctionType fType,
+                       List<VariableDefinition> varDefinitions = new ArrayList<>(),
+                       List<Statement> statements = new ArrayList<>()]:
+                   'void' id1='main' '(' ')' {$fType = new FunctionType(new VoidType(),$parameters);}
+                    '{' (vd=var_definition{$varDefinitions.add($vd.ast);})* (st=statement{$statements.add($st.ast);})* '}'
+                   {$ast = new FunctionDefinition($id1.text,$fType,$varDefinitions,$statements, $id1.getLine(),$id1.getCharPositionInLine()+1);}
+                   ;
 
 expression returns [Expression ast]:
            ID {$ast = new VariableExpression($ID.getText(), $ID.getLine(), $ID.getCharPositionInLine()+1);}
@@ -21,9 +33,9 @@ expression returns [Expression ast]:
           | cc=CHAR_CONSTANT {$ast = new CharLiteralExpression(LexerHelper.lexemeToChar($cc.getText()),$cc.getLine(), $cc.getCharPositionInLine()+1);}
           | fi=function_invocation
           {$ast = $fi.ast;}
-          | '(' expression ')'
+         // | '(' expression ')'
           | e1=expression '[' e2=expression ']'
-          {$ast = new IndexExpression($e1.ast, $e2.ast, $p1.getLine(), $p1.getCharPositionInLine()+1);}
+          {$ast = new IndexExpression($e1.ast, $e2.ast, $e1.ast.getLine(), $e1.ast.getColumn());}
           | e1=expression '.' ID
            {$ast = new FieldAccessExpression($e1.ast, $ID.text, $e1.ast.getLine(), $e1.ast.getColumn());}
           | p1='(' t1=primitive_type p2=')' e1=expression
@@ -32,7 +44,7 @@ expression returns [Expression ast]:
           {$ast = new UnaryMinusExpression($e1.ast, $op.getLine(), $op.getCharPositionInLine()+1);}
           | op='!' e1=expression
           {$ast = new NegationExpression($e1.ast, $op.getLine(), $op.getCharPositionInLine()+1);}
-          | expression ('*'|'/'|'%') expression
+          | e1=expression ('*'|'/'|'%') e2=expression
           {$ast = new ArithmeticExpression($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $op.text, $e2.ast);}
           | e1=expression op=('+'|'-') e2=expression
           {$ast = new ArithmeticExpression($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $op.text, $e2.ast);}
@@ -70,37 +82,60 @@ primitive_type returns [Type ast]: 'int' {$ast = new IntType();}
               ;
 
 statement returns [Statement ast]
-    locals  [List<Expression> expressions = new ArrayList<>()]:
+    locals  [List<Expression> expressions = new ArrayList<>(),List<Statement> elseBody = new ArrayList<>()]:
          wo='write' e1=expression {$expressions.add($e1.ast);}(','e2=expression{$expressions.add($e2.ast);})*';'
          {$ast = new WriteStatement($expressions,$wo.getLine(),$wo.getCharPositionInLine()+1);}
          | wo='read' e1=expression {$expressions.add($e1.ast);} (',' e2=expression {$expressions.add($e2.ast);})* ';'
          { $ast = new ReadStatement($expressions, $wo.getLine(), $wo.getCharPositionInLine() + 1); }
-         | 'return' expression (','expression)*';'//Una o varias?
+         | 'return' e1=expression ';'//(','expression)*';'//Una o varias?
+         {$ast = new ReturnStatement($e1.ast, $e1.ast.getLine(), $e1.ast.getColumn());}
          | e1=expression '=' e2=expression ';'
           { $ast = new AssignmentStatement($e1.ast, $e2.ast, $e1.ast.getLine(), $e1.ast.getColumn()); }
-         | 'while' '(' expression ')' block
-         | 'if' '(' expression ')' block ('else' block)?
+         | wo='while' '(' e1=expression ')' b1=block
+         {$ast = new WhileStatement($e1.ast, $b1.ast, $wo.getLine(), $wo.getCharPositionInLine()+1);}
+         | wo='if' '(' e1=expression ')' b1=block
+         ('else' b2=block {$elseBody.addAll($b2.ast);})?
+         {$ast = new IfElseStatement($e1.ast,$b1.ast, $elseBody ,$wo.getLine(), $wo.getCharPositionInLine() + 1);}
+          //Pregunta
        //  | ID '(' expression ')' ';'
          | fi=function_invocation ';'
          { $ast = $fi.ast;}
          ;
 
-block: statement
-| '{' statement* '}'
+block returns [List<Statement> ast = new ArrayList<>()]:
+        st=statement {$ast.add($st.ast);}
+        | '{' (st=statement{$ast.add($st.ast);})* '}'
 ;
 
-definition: var_definition
-          | function_definition
+definition returns [Definition ast]:
+            vd=var_definition {$ast = $vd.ast;}
+          | fd=function_definition {$ast = $fd.ast;}
           ;
 
-var_definition returns [VariableDefinition ast]: t2=type id1=ID (',' ID)* ';'
+var_definition returns [VariableDefinition ast]: t2=type id1=ID
                 {$ast = new VariableDefinition($t2.ast, $id1.getText(), $id1.getLine(), $id1.getCharPositionInLine()+1);}
+                (',' id2=ID{$ast.addName($id2.text);})* ';'
+
                 ;//cambiar
 
 
-function_definition: (primitive_type | 'void') ID '(' parameter_list? ')' '{' var_definition* statement* '}';
+function_definition returns [FunctionDefinition ast]
+                    locals [Type returnType,
+                       List<VariableDefinition> parameters = new ArrayList<>(),
+                       FunctionType fType,
+                       List<VariableDefinition> varDefinitions = new ArrayList<>(),
+                       List<Statement> statements = new ArrayList<>()]:
+                    ft=function_type{$returnType = $ft.ast;} id1=ID '(' (pa=parameter_list{$parameters = $pa.ast;})? ')' {$fType = new FunctionType($returnType, $parameters);}
+                     '{' (vd=var_definition{$varDefinitions.add($vd.ast);})* (st=statement{$statements.add($st.ast);})* '}'
+                     {$ast = new FunctionDefinition($id1.text,$fType ,$varDefinitions,$statements, $id1.getLine(),$id1.getCharPositionInLine()+1);}
+                     ;
 
-parameter_list: primitive_type ID (',' primitive_type ID)*;//type?
+function_type returns [Type ast]: pt=primitive_type{$ast = $pt.ast;} | 'void' {$ast = new VoidType();};
+
+parameter_list returns [List<VariableDefinition> ast = new ArrayList<>()]:
+                p1=primitive_type id1=ID {$ast.add(new VariableDefinition($p1.ast, $id1.getText(), $id1.getLine(), $id1.getCharPositionInLine()+1));}
+                (',' p2=primitive_type id2=ID {$ast.add(new VariableDefinition($p2.ast, $id2.getText(), $id2.getLine(), $id2.getCharPositionInLine()+1));})*
+                ;
 
 INT_CONSTANT: [1-9] [0-9]*
             | '0'

@@ -6,21 +6,27 @@ import ast.expressions.Expression;
 import java.util.List;
 
 public class IfElseStatement extends AbstractLocatable implements Statement {
-    private List<Expression> conditionExpressions;
+//    public IfElseStatement(List<Statement> ifBody, Expression conditionExpression, int line, int column) {
+//        super(line, column);
+//        this.ifBody = ifBody;
+//        this.conditionExpression = conditionExpression;
+//    }
+
+    private Expression conditionExpression;
     private List<Statement> ifBody;
     private List<Statement> elseBody;
 
-    public IfElseStatement(List<Expression> conditionExpressions, List<Statement> ifBody, List<Statement> elseBody, int line, int column) {
+    public IfElseStatement(Expression conditionExpression, List<Statement> ifBody, List<Statement> elseBody, int line, int column) {
         super(line, column);
-        if (conditionExpressions == null || conditionExpressions.isEmpty()) {
-            throw new IllegalArgumentException("El IfElseStatement debe tener al menos una expresión en la condición.");
-        }
-        this.conditionExpressions = conditionExpressions;
+//        if (conditionExpression == null || conditionExpression.isEmpty()) {
+//            throw new IllegalArgumentException("El IfElseStatement debe tener al menos una expresión en la condición.");
+//        }
+        this.conditionExpression = conditionExpression;
         this.ifBody = ifBody;
         this.elseBody = elseBody;
     }
     @Override
     public String toString() {
-        return "If (" + conditionExpressions + ") { " + ifBody + " } else { " + elseBody + " }";
+        return "If (" + conditionExpression + ") { " + ifBody + " } else { " + elseBody + " }";
     }
 }
