@@ -7,11 +7,10 @@ import ast.type.Type;
 import java.util.List;
 
 public class FunctionDefinition extends AbstractDefinition {
-    private FunctionType functionType; // Tipo de la función, incluye tipo de retorno y parámetros
-    private List<VariableDefinition> varDefinitions; // Definiciones de variables en el cuerpo de la función
-    private List<Statement> statements; // Instrucciones dentro de la función
+    private FunctionType functionType;
+    private List<VariableDefinition> varDefinitions;
+    private List<Statement> statements;
 
-    // Constructor para la definición de la función
     public FunctionDefinition(String name, FunctionType functionType,
                               List<VariableDefinition> varDefinitions, List<Statement> statements, int line, int column) {
         super(name,line,column);
@@ -20,7 +19,6 @@ public class FunctionDefinition extends AbstractDefinition {
         this.statements = statements;
     }
 
-    // Getter para el tipo de la función
     public FunctionType getFunctionType() {
         return functionType;
     }

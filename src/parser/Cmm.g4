@@ -11,7 +11,7 @@ grammar Cmm;
 
 program returns [Program ast]
            locals [List<Definition> definitions = new ArrayList<>()]:
-                (df1=definition{$definitions.add($df1.ast);})* df2=main_function{$definitions.add($df2.ast);}
+                (df1=definition{$definitions.add($df1.ast);})* df2=main_function{$definitions.add($df2.ast);} EOF
                 {$ast = new Program($definitions);}
                 ;
 
@@ -33,7 +33,7 @@ expression returns [Expression ast]:
           | cc=CHAR_CONSTANT {$ast = new CharLiteralExpression(LexerHelper.lexemeToChar($cc.getText()),$cc.getLine(), $cc.getCharPositionInLine()+1);}
           | fi=function_invocation
           {$ast = $fi.ast;}
-         // | '(' expression ')'
+          | '(' e1=expression ')' {$ast = $e1.ast;} //Add is for precedence
           | e1=expression '[' e2=expression ']'
           {$ast = new IndexExpression($e1.ast, $e2.ast, $e1.ast.getLine(), $e1.ast.getColumn());}
           | e1=expression '.' ID
@@ -61,7 +61,7 @@ function_invocation returns  [FunctionInvocation ast]
                    ;
 
 type returns [Type ast]: t1=primitive_type {$ast = $t1.ast;}
-    | t2=type '['ic=INT_CONSTANT']' {$ast = new ArrayType($t2.ast,LexerHelper.lexemeToInt($ic.getText()));}
+    | t2=type '['ic=INT_CONSTANT']' {$ast = new ArrayType($t2.ast,LexerHelper.lexemeToInt($ic.getText()));}//Factory
     | st=struct_type {$ast = $st.ast;}
     ;
 
@@ -83,9 +83,11 @@ primitive_type returns [Type ast]: 'int' {$ast = new IntType();}
 
 statement returns [Statement ast]
     locals  [List<Expression> expressions = new ArrayList<>(),List<Statement> elseBody = new ArrayList<>()]:
-         wo='write' e1=expression {$expressions.add($e1.ast);}(','e2=expression{$expressions.add($e2.ast);})*';'
+         wo='write' e1=expression {$expressions.add($e1.ast);}(','e2=expression{$expressions.add($e2.ast);})*';'//List: 1 statement of each write
          {$ast = new WriteStatement($expressions,$wo.getLine(),$wo.getCharPositionInLine()+1);}
-         | wo='read' e1=expression {$expressions.add($e1.ast);} (',' e2=expression {$expressions.add($e2.ast);})* ';'
+         //wo='write' e1=expression {$expressions.add(new WriteStatement($e1.ast,$wo.getLine(),$wo.getCharPositionInLine()+1));}
+         //(','e2=expression{$expressions.add(new WriteStatement($e2.ast,$wo.getLine(),$wo.getCharPositionInLine()+1));})*';'//List: 1 statement of each write
+         | wo='read' e1=expression {$expressions.add($e1.ast);} (',' e2=expression {$expressions.add($e2.ast);})* ';'//List
          { $ast = new ReadStatement($expressions, $wo.getLine(), $wo.getCharPositionInLine() + 1); }
          | 'return' e1=expression ';'//(','expression)*';'//Una o varias?
          {$ast = new ReturnStatement($e1.ast, $e1.ast.getLine(), $e1.ast.getColumn());}
@@ -97,10 +99,10 @@ statement returns [Statement ast]
          ('else' b2=block {$elseBody.addAll($b2.ast);})?
          {$ast = new IfElseStatement($e1.ast,$b1.ast, $elseBody ,$wo.getLine(), $wo.getCharPositionInLine() + 1);}
           //Pregunta
-       //  | ID '(' expression ')' ';'
          | fi=function_invocation ';'
          { $ast = $fi.ast;}
          ;
+
 
 block returns [List<Statement> ast = new ArrayList<>()]:
         st=statement {$ast.add($st.ast);}
@@ -112,7 +114,8 @@ definition returns [Definition ast]:
           | fd=function_definition {$ast = $fd.ast;}
           ;
 
-var_definition returns [VariableDefinition ast]: t2=type id1=ID
+var_definition returns [VariableDefinition ast]: //List
+                t2=type id1=ID
                 {$ast = new VariableDefinition($t2.ast, $id1.getText(), $id1.getLine(), $id1.getCharPositionInLine()+1);}
                 (',' id2=ID{$ast.addName($id2.text);})* ';'
 
