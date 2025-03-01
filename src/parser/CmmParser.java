@@ -155,7 +155,7 @@ public class CmmParser extends Parser {
 					{
 					setState(30);
 					((ProgramContext)_localctx).df1 = definition();
-					_localctx.definitions.add(((ProgramContext)_localctx).df1.ast);
+					_localctx.definitions.addAll(((ProgramContext)_localctx).df1.ast);
 					}
 					} 
 				}
@@ -236,7 +236,7 @@ public class CmmParser extends Parser {
 				{
 				setState(49);
 				((Main_functionContext)_localctx).vd = var_definition();
-				_localctx.varDefinitions.add(((Main_functionContext)_localctx).vd.ast);
+				_localctx.varDefinitions.addAll(((Main_functionContext)_localctx).vd.ast);
 				}
 				}
 				setState(56);
@@ -1169,7 +1169,7 @@ public class CmmParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class DefinitionContext extends ParserRuleContext {
-		public Definition ast;
+		public List<Definition> ast = new ArrayList<>();
 		public Var_definitionContext vd;
 		public Function_definitionContext fd;
 		public Var_definitionContext var_definition() {
@@ -1196,7 +1196,7 @@ public class CmmParser extends Parser {
 				{
 				setState(278);
 				((DefinitionContext)_localctx).vd = var_definition();
-				((DefinitionContext)_localctx).ast =  ((DefinitionContext)_localctx).vd.ast;
+				_localctx.ast.addAll(((DefinitionContext)_localctx).vd.ast);
 				}
 				break;
 			case 2:
@@ -1204,7 +1204,7 @@ public class CmmParser extends Parser {
 				{
 				setState(281);
 				((DefinitionContext)_localctx).fd = function_definition();
-				((DefinitionContext)_localctx).ast =  ((DefinitionContext)_localctx).fd.ast;
+				_localctx.ast.add(((DefinitionContext)_localctx).fd.ast);
 				}
 				break;
 			}
@@ -1222,7 +1222,7 @@ public class CmmParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Var_definitionContext extends ParserRuleContext {
-		public VariableDefinition ast;
+		public List<VariableDefinition> ast = new ArrayList<>();
 		public TypeContext t2;
 		public Token id1;
 		public Token id2;
@@ -1250,7 +1250,7 @@ public class CmmParser extends Parser {
 			((Var_definitionContext)_localctx).t2 = type(0);
 			setState(287);
 			((Var_definitionContext)_localctx).id1 = match(ID);
-			((Var_definitionContext)_localctx).ast =  new VariableDefinition(((Var_definitionContext)_localctx).t2.ast, ((Var_definitionContext)_localctx).id1.getText(), ((Var_definitionContext)_localctx).id1.getLine(), ((Var_definitionContext)_localctx).id1.getCharPositionInLine()+1);
+			_localctx.ast.add(new VariableDefinition(((Var_definitionContext)_localctx).t2.ast, ((Var_definitionContext)_localctx).id1.getText(), ((Var_definitionContext)_localctx).id1.getLine(), ((Var_definitionContext)_localctx).id1.getCharPositionInLine()+1));
 			setState(294);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -1261,7 +1261,7 @@ public class CmmParser extends Parser {
 				match(T__23);
 				setState(290);
 				((Var_definitionContext)_localctx).id2 = match(ID);
-				_localctx.ast.addName((((Var_definitionContext)_localctx).id2!=null?((Var_definitionContext)_localctx).id2.getText():null));
+				_localctx.ast.add(new VariableDefinition(((Var_definitionContext)_localctx).t2.ast, ((Var_definitionContext)_localctx).id2.getText(), ((Var_definitionContext)_localctx).id2.getLine(), ((Var_definitionContext)_localctx).id2.getCharPositionInLine()+1));
 				}
 				}
 				setState(296);
@@ -1359,7 +1359,7 @@ public class CmmParser extends Parser {
 				{
 				setState(311);
 				((Function_definitionContext)_localctx).vd = var_definition();
-				_localctx.varDefinitions.add(((Function_definitionContext)_localctx).vd.ast);
+				_localctx.varDefinitions.addAll(((Function_definitionContext)_localctx).vd.ast);
 				}
 				}
 				setState(318);

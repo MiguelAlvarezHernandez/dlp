@@ -11,7 +11,9 @@ grammar Cmm;
 
 program returns [Program ast]
            locals [List<Definition> definitions = new ArrayList<>()]:
-                (df1=definition{$definitions.add($df1.ast);})* df2=main_function{$definitions.add($df2.ast);} EOF
+                //(df1=definition{$definitions.add($df1.ast);})* df2=main_function{$definitions.add($df2.ast);} EOF
+                (df1=definition{$definitions.addAll($df1.ast);})* df2=main_function{$definitions.add($df2.ast);} EOF
+
                 {$ast = new Program($definitions);}
                 ;
 
@@ -21,7 +23,8 @@ main_function returns [Definition ast]
                        List<VariableDefinition> varDefinitions = new ArrayList<>(),
                        List<Statement> statements = new ArrayList<>()]:
                    'void' id1='main' '(' ')' {$fType = new FunctionType(new VoidType(),$parameters);}
-                    '{' (vd=var_definition{$varDefinitions.add($vd.ast);})* //(st=statement{$statements.add($st.ast);})* '}'
+                    //'{' (vd=var_definition{$varDefinitions.add($vd.ast);})* //(st=statement{$statements.add($st.ast);})* '}'
+                     '{' (vd=var_definition{$varDefinitions.addAll($vd.ast);})*
                    (st=statement{$statements.addAll($st.ast);})* '}'
                    {$ast = new FunctionDefinition($id1.text,$fType,$varDefinitions,$statements, $id1.getLine(),$id1.getCharPositionInLine()+1);}
                    ;
@@ -126,15 +129,21 @@ block returns [List<Statement> ast = new ArrayList<>()]:
 
 ;
 
-definition returns [Definition ast]:
-            vd=var_definition {$ast = $vd.ast;}
-          | fd=function_definition {$ast = $fd.ast;}
+definition returns [List<Definition> ast = new ArrayList<>()]:
+            vd=var_definition //{$ast = $vd.ast;}
+            {$ast.addAll($vd.ast);}
+          | fd=function_definition //{$ast = $fd.ast;}
+          {$ast.add($fd.ast);}
           ;
 
-var_definition returns [VariableDefinition ast]: //List
+var_definition returns [List<VariableDefinition> ast = new ArrayList<>()]: //List
                 t2=type id1=ID
-                {$ast = new VariableDefinition($t2.ast, $id1.getText(), $id1.getLine(), $id1.getCharPositionInLine()+1);}
-                (',' id2=ID{$ast.addName($id2.text);})* ';'
+                //{$ast = new VariableDefinition($t2.ast, $id1.getText(), $id1.getLine(), $id1.getCharPositionInLine()+1);}
+                {$ast.add(new VariableDefinition($t2.ast, $id1.getText(), $id1.getLine(), $id1.getCharPositionInLine()+1));}
+
+                //(',' id2=ID{$ast.addName($id2.text);})* ';'
+                (',' id2=ID{$ast.add(new VariableDefinition($t2.ast, $id2.getText(), $id2.getLine(), $id2.getCharPositionInLine()+1));})* ';'
+
 
                 ;//cambiar
 
@@ -146,7 +155,8 @@ function_definition returns [FunctionDefinition ast]
                        List<VariableDefinition> varDefinitions = new ArrayList<>(),
                        List<Statement> statements = new ArrayList<>()]:
                     ft=function_type{$returnType = $ft.ast;} id1=ID '(' (pa=parameter_list{$parameters = $pa.ast;})? ')' {$fType = new FunctionType($returnType, $parameters);}
-                     '{' (vd=var_definition{$varDefinitions.add($vd.ast);})* //(st=statement{$statements.add($st.ast);})* '}'
+                     //'{' (vd=var_definition{$varDefinitions.add($vd.ast);})* //(st=statement{$statements.add($st.ast);})* '}'
+                     '{' (vd=var_definition{$varDefinitions.addAll($vd.ast);})*
                      (st=statement{$statements.addAll($st.ast);})* '}'
                      {$ast = new FunctionDefinition($id1.text,$fType ,$varDefinitions,$statements, $id1.getLine(),$id1.getCharPositionInLine()+1);}
                      ;
