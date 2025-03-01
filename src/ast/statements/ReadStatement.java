@@ -6,14 +6,14 @@ import ast.expressions.Expression;
 import java.util.List;
 
 public class ReadStatement extends AbstractLocatable implements Statement {
-    private List<Expression> valuesToRead;
+    private Expression valueToRead;
 
-    public ReadStatement(List<Expression> valuesToRead, int line, int column) {
+    public ReadStatement(Expression valueToRead, int line, int column) {
         super(line, column);
-        this.valuesToRead = valuesToRead;
+        this.valueToRead = valueToRead;
     }
     @Override
     public String toString() {
-        return "Read " + valuesToRead.toString();
+        return "Read " + valueToRead.toString();
     }
 }

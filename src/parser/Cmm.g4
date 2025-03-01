@@ -21,7 +21,8 @@ main_function returns [Definition ast]
                        List<VariableDefinition> varDefinitions = new ArrayList<>(),
                        List<Statement> statements = new ArrayList<>()]:
                    'void' id1='main' '(' ')' {$fType = new FunctionType(new VoidType(),$parameters);}
-                    '{' (vd=var_definition{$varDefinitions.add($vd.ast);})* (st=statement{$statements.add($st.ast);})* '}'
+                    '{' (vd=var_definition{$varDefinitions.add($vd.ast);})* //(st=statement{$statements.add($st.ast);})* '}'
+                   (st=statement{$statements.addAll($st.ast);})* '}'
                    {$ast = new FunctionDefinition($id1.text,$fType,$varDefinitions,$statements, $id1.getLine(),$id1.getCharPositionInLine()+1);}
                    ;
 
@@ -81,32 +82,48 @@ primitive_type returns [Type ast]: 'int' {$ast = new IntType();}
               | 'double' {$ast = new DoubleType();}
               ;
 
-statement returns [Statement ast]
+statement returns [List<Statement> ast = new ArrayList<>()]
     locals  [List<Expression> expressions = new ArrayList<>(),List<Statement> elseBody = new ArrayList<>()]:
-         wo='write' e1=expression {$expressions.add($e1.ast);}(','e2=expression{$expressions.add($e2.ast);})*';'//List: 1 statement of each write
-         {$ast = new WriteStatement($expressions,$wo.getLine(),$wo.getCharPositionInLine()+1);}
-         //wo='write' e1=expression {$expressions.add(new WriteStatement($e1.ast,$wo.getLine(),$wo.getCharPositionInLine()+1));}
-         //(','e2=expression{$expressions.add(new WriteStatement($e2.ast,$wo.getLine(),$wo.getCharPositionInLine()+1));})*';'//List: 1 statement of each write
-         | wo='read' e1=expression {$expressions.add($e1.ast);} (',' e2=expression {$expressions.add($e2.ast);})* ';'//List
-         { $ast = new ReadStatement($expressions, $wo.getLine(), $wo.getCharPositionInLine() + 1); }
+         //wo='write' e1=expression {$expressions.add($e1.ast);}(','e2=expression{$expressions.add($e2.ast);})*';'//List: 1 statement of each write
+         //{$ast = new WriteStatement($expressions,$wo.getLine(),$wo.getCharPositionInLine()+1);}
+         wo='write' e1=expression {$ast.add(new WriteStatement($e1.ast,$wo.getLine(),$wo.getCharPositionInLine()+1));}
+         (','e2=expression{$ast.add(new WriteStatement($e2.ast,$wo.getLine(),$wo.getCharPositionInLine()+1));})*';'//List: 1 statement of each write
+         //| wo='read' e1=expression {$expressions.add($e1.ast);} (',' e2=expression {$expressions.add($e2.ast);})* ';'//List
+         //{ $ast = new ReadStatement($expressions, $wo.getLine(), $wo.getCharPositionInLine() + 1); }
+         | wo='read' e1=expression {$ast.add(new ReadStatement($e1.ast,$wo.getLine(),$wo.getCharPositionInLine()+1));}
+         (','e2=expression{$ast.add(new ReadStatement($e2.ast,$wo.getLine(),$wo.getCharPositionInLine()+1));})*';'
          | 'return' e1=expression ';'//(','expression)*';'//Una o varias?
-         {$ast = new ReturnStatement($e1.ast, $e1.ast.getLine(), $e1.ast.getColumn());}
+         //{$ast = new ReturnStatement($e1.ast, $e1.ast.getLine(), $e1.ast.getColumn());}
+         {$ast.add(new ReturnStatement($e1.ast, $e1.ast.getLine(), $e1.ast.getColumn()));}
+
          | e1=expression '=' e2=expression ';'
-          { $ast = new AssignmentStatement($e1.ast, $e2.ast, $e1.ast.getLine(), $e1.ast.getColumn()); }
+          //{ $ast = new AssignmentStatement($e1.ast, $e2.ast, $e1.ast.getLine(), $e1.ast.getColumn()); }
+         { $ast.add(new AssignmentStatement($e1.ast, $e2.ast, $e1.ast.getLine(), $e1.ast.getColumn())); }
+
          | wo='while' '(' e1=expression ')' b1=block
-         {$ast = new WhileStatement($e1.ast, $b1.ast, $wo.getLine(), $wo.getCharPositionInLine()+1);}
+         //{$ast = new WhileStatement($e1.ast, $b1.ast, $wo.getLine(), $wo.getCharPositionInLine()+1);}
+         { $ast.add(new WhileStatement($e1.ast, $b1.ast, $wo.getLine(), $wo.getCharPositionInLine()+1));}
+
          | wo='if' '(' e1=expression ')' b1=block
          ('else' b2=block {$elseBody.addAll($b2.ast);})?
-         {$ast = new IfElseStatement($e1.ast,$b1.ast, $elseBody ,$wo.getLine(), $wo.getCharPositionInLine() + 1);}
+         //{$ast = new IfElseStatement($e1.ast,$b1.ast, $elseBody ,$wo.getLine(), $wo.getCharPositionInLine() + 1);}
+         {$ast.add(new IfElseStatement($e1.ast,$b1.ast, $elseBody ,$wo.getLine(), $wo.getCharPositionInLine() + 1));}
+
           //Pregunta
          | fi=function_invocation ';'
-         { $ast = $fi.ast;}
+         //{ $ast = $fi.ast;}
+         {$ast.add($fi.ast);}
+
          ;
 
 
 block returns [List<Statement> ast = new ArrayList<>()]:
-        st=statement {$ast.add($st.ast);}
-        | '{' (st=statement{$ast.add($st.ast);})* '}'
+        //st=statement {$ast.add($st.ast);}
+        st=statement {$ast.addAll($st.ast);}
+
+        //| '{' (st=statement{$ast.add($st.ast);})* '}'
+        | '{' (st=statement{$ast.addAll($st.ast);})* '}'
+
 ;
 
 definition returns [Definition ast]:
@@ -129,7 +146,8 @@ function_definition returns [FunctionDefinition ast]
                        List<VariableDefinition> varDefinitions = new ArrayList<>(),
                        List<Statement> statements = new ArrayList<>()]:
                     ft=function_type{$returnType = $ft.ast;} id1=ID '(' (pa=parameter_list{$parameters = $pa.ast;})? ')' {$fType = new FunctionType($returnType, $parameters);}
-                     '{' (vd=var_definition{$varDefinitions.add($vd.ast);})* (st=statement{$statements.add($st.ast);})* '}'
+                     '{' (vd=var_definition{$varDefinitions.add($vd.ast);})* //(st=statement{$statements.add($st.ast);})* '}'
+                     (st=statement{$statements.addAll($st.ast);})* '}'
                      {$ast = new FunctionDefinition($id1.text,$fType ,$varDefinitions,$statements, $id1.getLine(),$id1.getCharPositionInLine()+1);}
                      ;
 
