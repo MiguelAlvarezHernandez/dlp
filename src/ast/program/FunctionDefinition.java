@@ -36,30 +36,11 @@ public class FunctionDefinition extends AbstractDefinition {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(functionType.getReturnType().toString()).append(" ");
-        sb.append(super.getName()).append("(");
-
-        List<VariableDefinition> parameters = functionType.getParameterTypes();
-        for (int i = 0; i < parameters.size(); i++) {
-            sb.append(parameters.get(i).getType().toString())
-                    .append(" ").append(parameters.get(i).getName());
-            if (i < parameters.size() - 1) {
-                sb.append(", ");
-            }
-        }
-        sb.append(") {\n");
-
-        for (VariableDefinition varDef : varDefinitions) {
-            sb.append("    ").append(varDef.toString()).append(";\n");
-        }
-
-        for (Statement statement : statements) {
-            sb.append("    ").append(statement.toString()).append("\n");
-        }
-        sb.append("}");
-
-        return sb.toString();
+        return "FunctionDefinition{" +
+                "functionType=" + functionType +
+                ", varDefinitions=" + varDefinitions +
+                ", statements=" + statements +
+                '}';
     }
 }
 

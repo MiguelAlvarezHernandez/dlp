@@ -20,4 +20,12 @@ public class IndexExpression extends AbstractLocatable implements Expression {
         return index;
     }
 
+    @Override
+    public String toString() {
+        return "IndexExpression{" +
+                "array=" + array +
+                ", index=" + index +
+                '}';
+    }
+
 }

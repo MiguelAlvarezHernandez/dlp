@@ -428,9 +428,10 @@ public class CmmParser extends Parser {
 						setState(101);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(102);
+						((ExpressionContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 28672L) != 0)) ) {
-						_errHandler.recoverInline(this);
+							((ExpressionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -439,7 +440,7 @@ public class CmmParser extends Parser {
 						}
 						setState(103);
 						((ExpressionContext)_localctx).e2 = expression(5);
-						((ExpressionContext)_localctx).ast =  new ArithmeticExpression(((ExpressionContext)_localctx).e1.ast.getLine(), ((ExpressionContext)_localctx).e1.ast.getColumn(), ((ExpressionContext)_localctx).e1.ast, (((ExpressionContext)_localctx).op!=null?((ExpressionContext)_localctx).op.getText():null), ((ExpressionContext)_localctx).e2.ast);
+						((ExpressionContext)_localctx).ast =  ArithmeticExpression.create(((ExpressionContext)_localctx).e1.ast.getLine(), ((ExpressionContext)_localctx).e1.ast.getColumn(), ((ExpressionContext)_localctx).e1.ast, (((ExpressionContext)_localctx).op!=null?((ExpressionContext)_localctx).op.getText():null), ((ExpressionContext)_localctx).e2.ast);
 						}
 						break;
 					case 2:
@@ -717,7 +718,7 @@ public class CmmParser extends Parser {
 					((TypeContext)_localctx).ic = match(INT_CONSTANT);
 					setState(166);
 					match(T__7);
-					((TypeContext)_localctx).ast =  new ArrayType(((TypeContext)_localctx).t2.ast,LexerHelper.lexemeToInt(((TypeContext)_localctx).ic.getText()));
+					((TypeContext)_localctx).ast =  ArrayType.create(((TypeContext)_localctx).t2.ast,LexerHelper.lexemeToInt(((TypeContext)_localctx).ic.getText()));
 					}
 					} 
 				}

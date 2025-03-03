@@ -17,4 +17,10 @@ public class AbstractDefinition extends AbstractLocatable implements Definition{
         return name;
     }
 
+    @Override
+    public String toString() {
+        return "AbstractDefinition{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

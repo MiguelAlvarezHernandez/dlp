@@ -25,4 +25,13 @@ public class LogicalExpression extends AbstractLocatable implements Expression {
     public String getOperator() {
         return operator;
     }
+
+    @Override
+    public String toString() {
+        return "LogicalExpression{" +
+                "left=" + left +
+                ", right=" + right +
+                ", operator='" + operator + '\'' +
+                '}';
+    }
 }

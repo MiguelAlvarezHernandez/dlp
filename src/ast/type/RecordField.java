@@ -17,7 +17,11 @@ public class RecordField {
         return name;
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return "RecordField{" +
+                "fieldType=" + fieldType +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

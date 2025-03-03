@@ -4,21 +4,27 @@ import ast.AbstractLocatable;
 
 public class ArithmeticExpression extends AbstractLocatable implements Expression {
     private Expression left;
+
     private Expression right;
     private String operator;
 
-//    public ArithmeticExpression(Expression left, Expression right, String operator, int line, int column) {
-//        super(line, column);
-//        this.left = left;
-//        this.right = right;
-//        this.operator = operator;
-//    }
 
     public ArithmeticExpression(int line, int column,Expression left, String operator, Expression right){
         super(line, column);
         this.left = left;
         this.right = right;
         this.operator = operator;
+    }
+
+    public static Expression create(int line, int column,Expression left, String operator, Expression right) {
+        if (operator.equals("%")) {
+//            if (!(left instanceof IntLiteralExpression
+//            || left instanceof VariableExpression) || !(right instanceof IntLiteralExpression)) {
+//                throw new IllegalArgumentException("Modulo operator '%' requires both operands to be integers.");
+//            }
+            return new ModuleExpression(line, column, left, right);
+        }
+        return new ArithmeticExpression(line, column, left, operator, right);
     }
 
     public Expression getLeft() {
@@ -31,6 +37,15 @@ public class ArithmeticExpression extends AbstractLocatable implements Expressio
 
     public String getOperator() {
         return operator;
+    }
+
+    @Override
+    public String toString() {
+        return "ArithmeticExpression{" +
+                "left=" + left +
+                ", right=" + right +
+                ", operator='" + operator + '\'' +
+                '}';
     }
 }
 

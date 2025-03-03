@@ -13,4 +13,11 @@ public class NegationExpression extends AbstractLocatable implements Expression 
     public Expression getExpression() {
         return expression;
     }
+
+    @Override
+    public String toString() {
+        return "NegationExpression{" +
+                "expression=" + expression +
+                '}';
+    }
 }

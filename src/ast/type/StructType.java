@@ -9,5 +9,10 @@ public class StructType implements Type {
         this.recordFields = recordFields;
     }
 
-
+    @Override
+    public String toString() {
+        return "StructType{" +
+                "recordFields=" + recordFields +
+                '}';
+    }
 }

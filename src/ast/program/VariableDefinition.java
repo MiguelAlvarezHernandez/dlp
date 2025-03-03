@@ -19,4 +19,10 @@ public class VariableDefinition extends AbstractDefinition {
         return type;
     }
 
+    @Override
+    public String toString() {
+        return "VariableDefinition{" +
+                "type=" + type +
+                '}';
+    }
 }

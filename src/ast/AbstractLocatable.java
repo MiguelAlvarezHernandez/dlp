@@ -18,4 +18,12 @@ public class AbstractLocatable implements Locatable{
     public int getColumn() {
         return column;
     }
+
+    @Override
+    public String toString() {
+        return "AbstractLocatable{" +
+                "line=" + line +
+                ", column=" + column +
+                '}';
+    }
 }

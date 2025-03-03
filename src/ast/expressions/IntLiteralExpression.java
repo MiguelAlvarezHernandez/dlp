@@ -13,4 +13,11 @@ public class IntLiteralExpression extends AbstractLocatable implements Expressio
     public int getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "IntLiteralExpression{" +
+                "value=" + value +
+                '}';
+    }
 }

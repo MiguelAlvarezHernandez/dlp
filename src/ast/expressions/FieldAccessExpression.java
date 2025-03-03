@@ -19,4 +19,13 @@ public class FieldAccessExpression extends AbstractLocatable implements Expressi
     public String getField() {
         return field;
     }
+
+    @Override
+    public String toString() {
+        return "FieldAccessExpression{" +
+                "record=" + record +
+                ", field='" + field + '\'' +
+                '}';
+    }
+
 }

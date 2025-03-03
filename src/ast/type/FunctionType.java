@@ -21,4 +21,12 @@ public class FunctionType implements Type {
 
         return parameterTypes;
     }
+
+    @Override
+    public String toString() {
+        return "FunctionType{" +
+                "returnType=" + returnType +
+                ", parameterTypes=" + parameterTypes +
+                '}';
+    }
 }

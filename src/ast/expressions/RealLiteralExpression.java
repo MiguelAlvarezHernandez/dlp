@@ -13,4 +13,10 @@ public class RealLiteralExpression extends AbstractLocatable implements Expressi
     public double getValue() {
         return value;
     }
+    @Override
+    public String toString() {
+        return "RealLiteralExpression{" +
+                "value=" + value +
+                '}';
+    }
 }

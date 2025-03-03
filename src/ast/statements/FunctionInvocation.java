@@ -14,5 +14,13 @@ public class FunctionInvocation extends AbstractLocatable implements Statement, 
         this.functionName = functionName;
         this.arguments = arguments;
     }
+
+    @Override
+    public String toString() {
+        return "FunctionInvocation{" +
+                "functionName='" + functionName + '\'' +
+                ", arguments=" + arguments +
+                '}';
+    }
 }
 

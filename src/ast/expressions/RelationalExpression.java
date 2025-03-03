@@ -25,5 +25,14 @@ public class RelationalExpression extends AbstractLocatable implements Expressio
     public String getOperator() {
         return operator;
     }
+
+    @Override
+    public String toString() {
+        return "RelationalExpression{" +
+                "left=" + left +
+                ", right=" + right +
+                ", operator='" + operator + '\'' +
+                '}';
+    }
 }
 
