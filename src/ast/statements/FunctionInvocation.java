@@ -2,23 +2,24 @@ package ast.statements;
 
 import ast.AbstractLocatable;
 import ast.expressions.Expression;
+import ast.expressions.VariableExpression;
 
 import java.util.List;
 
 public class FunctionInvocation extends AbstractLocatable implements Statement, Expression  {
-    private String functionName;
+    private VariableExpression variable;
     private List<Expression> arguments;
 
-    public FunctionInvocation(String functionName, List<Expression> arguments, int line, int column) {
+    public FunctionInvocation(VariableExpression variable, List<Expression> arguments, int line, int column) {
         super(line, column);
-        this.functionName = functionName;
+        this.variable = variable;
         this.arguments = arguments;
     }
 
     @Override
     public String toString() {
         return "FunctionInvocation{" +
-                "functionName='" + functionName + '\'' +
+                "variable=" + variable +
                 ", arguments=" + arguments +
                 '}';
     }

@@ -623,7 +623,8 @@ public class CmmParser extends Parser {
 
 			setState(151);
 			match(T__3);
-			((Function_invocationContext)_localctx).ast =  new FunctionInvocation((((Function_invocationContext)_localctx).ID!=null?((Function_invocationContext)_localctx).ID.getText():null), _localctx.expressions, ((Function_invocationContext)_localctx).ID.getLine(), ((Function_invocationContext)_localctx).ID.getCharPositionInLine()+1);
+			((Function_invocationContext)_localctx).ast =  new FunctionInvocation(new VariableExpression(((Function_invocationContext)_localctx).ID.getText(), ((Function_invocationContext)_localctx).ID.getLine(), ((Function_invocationContext)_localctx).ID.getCharPositionInLine()+1),
+			                        _localctx.expressions, ((Function_invocationContext)_localctx).ID.getLine(), ((Function_invocationContext)_localctx).ID.getCharPositionInLine()+1);
 			}
 		}
 		catch (RecognitionException re) {

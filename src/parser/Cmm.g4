@@ -58,7 +58,8 @@ expression returns [Expression ast]:
 function_invocation returns  [FunctionInvocation ast]
                     locals  [List<Expression> expressions = new ArrayList<>()]:
                     ID '(' ( e2=expression{$expressions.add($e2.ast);} (','e3=expression{$expressions.add($e3.ast);})* )? ')'
-                    {$ast = new FunctionInvocation($ID.text, $expressions, $ID.getLine(), $ID.getCharPositionInLine()+1);}
+                    {$ast = new FunctionInvocation(new VariableExpression($ID.getText(), $ID.getLine(), $ID.getCharPositionInLine()+1),
+                        $expressions, $ID.getLine(), $ID.getCharPositionInLine()+1);}
                    ;
 
 type returns [Type ast]:
