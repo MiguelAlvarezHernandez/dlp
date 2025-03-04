@@ -6,11 +6,11 @@ public class LexicalMain {
 
 	public static void main(String... args) throws Exception {
 		if (args.length < 1) {
-			System.err.println("Please, pass me the input file name.");
+			System.err.println("Please, pass me the input.txt file name.");
 			return;
 		}
 
-		// creates a lexer that feeds off of input CharStream
+		// creates a lexer that feeds off of input.txt CharStream
 		CharStream input = CharStreams.fromFileName(args[0]);
 
 		// creates a buffer of tokens pulled from the lexer

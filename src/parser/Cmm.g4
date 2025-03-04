@@ -72,10 +72,14 @@ type returns [Type ast]:
 
 struct_type returns  [StructType ast]
             locals  [List<RecordField> fields = new ArrayList<>()]:
-            'struct' '{' (rf=record_field{$fields.add($rf.ast);})+ '}'
+            //'struct' '{' (rf=record_field{$fields.add($rf.ast);})+ '}'
+            'struct' '{' (rf=record_field{$fields.addAll($rf.ast);})+ '}'
             {$ast = new StructType($fields);};
 
-record_field returns [RecordField ast]: t=type ID ';' {$ast = new RecordField($t.ast, $ID.text);}
+//record_field returns [RecordField ast]: t=type ID ';' {$ast = new RecordField($t.ast, $ID.text);}
+//            ;
+record_field returns [List<RecordField> ast = new ArrayList<>()]: t=type id1=ID {$ast.add(new RecordField($t.ast, $id1.text,$id1.getLine(),$id1.getCharPositionInLine()+1));}
+              (',' id2=ID{$ast.add(new RecordField($t.ast, $id2.text,$id2.getLine(),$id2.getCharPositionInLine()+1));})*';'
             ;
 
 primitive_type returns [Type ast]: 'int' {$ast = new IntType();}

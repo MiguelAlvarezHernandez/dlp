@@ -8,13 +8,13 @@ public class LexerText {
 
 	public static void main(String... args) throws Exception {
 
-		// creates a lexer that feeds off of input CharStream
-		CharStream input = CharStreams.fromFileName("input.txt");
+		// creates a lexer that feeds off of input.txt CharStream
+		CharStream input = CharStreams.fromFileName("inputLexical.txt");
 
 		// creates a buffer of tokens pulled from the lexer
 		CmmLexer lexer = new CmmLexer(input);
 
-		// tests the lexer for the given input file
+		// tests the lexer for the given input.txt file
 		Token token;
 		int i = 0;
 		while ((token = lexer.nextToken()).getType() != CmmLexer.EOF) {

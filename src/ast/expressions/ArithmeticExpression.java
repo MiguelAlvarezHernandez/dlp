@@ -18,10 +18,7 @@ public class ArithmeticExpression extends AbstractLocatable implements Expressio
 
     public static Expression create(int line, int column,Expression left, String operator, Expression right) {
         if (operator.equals("%")) {
-//            if (!(left instanceof IntLiteralExpression
-//            || left instanceof VariableExpression) || !(right instanceof IntLiteralExpression)) {
-//                throw new IllegalArgumentException("Modulo operator '%' requires both operands to be integers.");
-//            }
+
             return new ModuleExpression(line, column, left, right);
         }
         return new ArithmeticExpression(line, column, left, operator, right);
