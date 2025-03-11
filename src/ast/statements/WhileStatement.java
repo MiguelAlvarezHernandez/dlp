@@ -15,6 +15,13 @@ public class WhileStatement extends AbstractLocatable implements Statement {
         this.condition = condition;
         this.body = body;
     }
+    public Expression getCondition() {
+        return condition;
+    }
+
+    public List<Statement> getBody() {
+        return body;
+    }
 
     @Override
     public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {

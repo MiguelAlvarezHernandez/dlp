@@ -27,6 +27,17 @@ public class IfElseStatement extends AbstractLocatable implements Statement {
         this.elseBody = elseBody;
     }
 
+    public List<Statement> getElseBody() {
+        return elseBody;
+    }
+    public List<Statement> getIfBody() {
+        return ifBody;
+    }
+    public Expression getConditionExpression() {
+        return conditionExpression;
+    }
+
+
     @Override
     public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
         return v.visit(this,  p);

@@ -12,6 +12,9 @@ public class ReadStatement extends AbstractLocatable implements Statement {
         this.valueToRead = valueToRead;
     }
 
+    public Expression getValueToRead() {
+        return valueToRead;
+    }
     @Override
     public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
         return v.visit(this,  p);

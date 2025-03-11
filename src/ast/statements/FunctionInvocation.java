@@ -17,6 +17,14 @@ public class FunctionInvocation extends AbstractExpression implements Statement 
         this.arguments = arguments;
     }
 
+    public VariableExpression getVariable() {
+        return variable;
+    }
+
+    public List<Expression> getArguments() {
+        return arguments;
+    }
+
     @Override
     public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
         return v.visit(this,  p);

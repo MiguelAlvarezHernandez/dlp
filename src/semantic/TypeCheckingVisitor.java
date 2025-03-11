@@ -1,6 +1,7 @@
 package semantic;
 
 import ast.expressions.*;
+import ast.program.Definition;
 import ast.program.FunctionDefinition;
 import ast.program.Program;
 import ast.program.VariableDefinition;
@@ -11,16 +12,27 @@ public class TypeCheckingVisitor implements Visitor<Void,Void>{
 
     @Override
     public Void visit(Program program, Void param) {
+        for(Definition def: program.getDefinitions()){
+            def.accept(this, param);
+        }
         return null;
     }
 
     @Override
     public Void visit(FunctionDefinition functionDefinition, Void param) {
+        functionDefinition.getFunctionType().accept(this, param);
+        for(Definition def: functionDefinition.getVarDefinitions()){
+            def.accept(this, param);
+        }
+        for (Statement statement: functionDefinition.getStatements()){
+            statement.accept(this, param);
+        }
         return null;
     }
 
     @Override
     public Void visit(VariableDefinition variableDefinition, Void param) {
+        variableDefinition.getType().accept(this, param);
         return null;
     }
 
@@ -36,31 +48,53 @@ public class TypeCheckingVisitor implements Visitor<Void,Void>{
 
     @Override
     public Void visit(FunctionInvocation functionInvocation, Void param) {
+        functionInvocation.getVariable().accept(this, param);
+        for(Expression expr: functionInvocation.getArguments()){
+            expr.accept(this, param);
+        }
+        functionInvocation.setLValue(false);
         return null;
     }
 
     @Override
     public Void visit(IfElseStatement ifElseStatement, Void param) {
+        ifElseStatement.getConditionExpression().accept(this, param);
+        for (Statement statement : ifElseStatement.getIfBody()){
+            statement.accept(this, param);
+        }
+        for (Statement statement : ifElseStatement.getElseBody()){
+            statement.accept(this, param);
+        }
         return null;
     }
 
     @Override
     public Void visit(ReadStatement readStatement, Void param) {
+        readStatement.getValueToRead().accept(this, param);
+        if(!readStatement.getValueToRead().getLValue()){
+            new ErrorType(readStatement.getLine(), readStatement.getColumn(), "L-Value is wrong");
+        }
         return null;
     }
 
     @Override
     public Void visit(ReturnStatement returnStatement, Void param) {
+        returnStatement.getReturnValue().accept(this, param);
         return null;
     }
 
     @Override
     public Void visit(WhileStatement whileStatement, Void param) {
+        whileStatement.getCondition().accept(this, param);
+        for (Statement statement : whileStatement.getBody()){
+            statement.accept(this, param);
+        }
         return null;
     }
 
     @Override
     public Void visit(WriteStatement writeStatement, Void param) {
+        writeStatement.getValueToWrite().accept(this, param);
         return null;
     }
 

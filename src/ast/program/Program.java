@@ -12,6 +12,10 @@ public class Program implements ASTNode {
         this.definitions = definitions;
     }
 
+    public List<Definition> getDefinitions() {
+        return definitions;
+    }
+
     @Override
     public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
         return v.visit(this,  p);

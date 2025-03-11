@@ -13,6 +13,10 @@ public class WriteStatement extends AbstractLocatable implements Statement {
         this.valueToWrite = valueToWrite;
     }
 
+    public Expression getValueToWrite() {
+        return valueToWrite;
+    }
+
     @Override
     public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
         return v.visit(this,  p);
