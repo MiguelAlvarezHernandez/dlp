@@ -11,11 +11,11 @@ public abstract class AbstractExpression extends AbstractLocatable implements Ex
 
     @Override
     public boolean getLValue() {
-        return false;
+        return lvalue;
     }
 
     @Override
     public void setLValue(boolean value) {
-
+        this.lvalue=value;
     }
 }
