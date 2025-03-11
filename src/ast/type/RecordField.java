@@ -1,6 +1,7 @@
 package ast.type;
 
 import ast.AbstractLocatable;
+import semantic.Visitor;
 
 public class RecordField extends AbstractLocatable {
     private Type fieldType;
@@ -18,6 +19,11 @@ public class RecordField extends AbstractLocatable {
     }
     public String getName() {
         return name;
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override

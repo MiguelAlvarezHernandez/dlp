@@ -1,8 +1,8 @@
 package ast.expressions;
 
-import ast.AbstractLocatable;
+import semantic.Visitor;
 
-public class NegationExpression extends AbstractLocatable implements Expression {
+public class NegationExpression extends AbstractExpression {
     private Expression expression;
 
     public NegationExpression(Expression expression, int line, int column) {
@@ -12,6 +12,11 @@ public class NegationExpression extends AbstractLocatable implements Expression 
 
     public Expression getExpression() {
         return expression;
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override

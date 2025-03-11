@@ -1,7 +1,6 @@
 package ast.type;
 
-import ast.errorhandler.ErrorHandler;
-import ast.program.VariableDefinition;
+import semantic.Visitor;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,10 +20,17 @@ public class StructType implements Type {
 
         for (RecordField field : recordFields) {
             if (!fieldNames.add(field.getName())) {
-                ErrorHandler.getInstance().addError(new ErrorType(field.getLine(), field.getColumn(),
-                        "Duplicate field '" + field.getName() + "' in struct."));
+                new ErrorType(field.getLine(), field.getColumn(),
+                        "Duplicate field '" + field.getName() + "' in struct.");
+//                ErrorHandler.getInstance().addError(new ErrorType(field.getLine(), field.getColumn(),
+//                        "Duplicate field '" + field.getName() + "' in struct."));
             }
         }
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override

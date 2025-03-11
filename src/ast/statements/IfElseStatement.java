@@ -2,6 +2,7 @@ package ast.statements;
 
 import ast.AbstractLocatable;
 import ast.expressions.Expression;
+import semantic.Visitor;
 
 import java.util.List;
 
@@ -25,6 +26,12 @@ public class IfElseStatement extends AbstractLocatable implements Statement {
         this.ifBody = ifBody;
         this.elseBody = elseBody;
     }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
+    }
+
     @Override
     public String toString() {
         return "If (" + conditionExpression + ") { " + ifBody + " } else { " + elseBody + " }";

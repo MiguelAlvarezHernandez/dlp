@@ -1,6 +1,7 @@
 package ast.type;
 
 import ast.program.VariableDefinition;
+import semantic.Visitor;
 
 import java.util.List;
 
@@ -20,6 +21,11 @@ public class FunctionType implements Type {
     public List<VariableDefinition> getParameterTypes() {
 
         return parameterTypes;
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override

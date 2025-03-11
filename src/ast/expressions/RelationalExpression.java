@@ -1,8 +1,8 @@
 package ast.expressions;
 
-import ast.AbstractLocatable;
+import semantic.Visitor;
 
-public class RelationalExpression extends AbstractLocatable implements Expression {
+public class RelationalExpression extends AbstractExpression {
     private Expression left;
     private Expression right;
     private String operator;
@@ -24,6 +24,11 @@ public class RelationalExpression extends AbstractLocatable implements Expressio
 
     public String getOperator() {
         return operator;
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override

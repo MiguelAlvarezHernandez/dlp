@@ -2,6 +2,7 @@ package ast.statements;
 
 import ast.AbstractLocatable;
 import ast.expressions.Expression;
+import semantic.Visitor;
 
 import java.util.List;
 
@@ -13,6 +14,11 @@ public class WhileStatement extends AbstractLocatable implements Statement {
         super(line, column);
         this.condition = condition;
         this.body = body;
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override

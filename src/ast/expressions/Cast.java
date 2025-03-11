@@ -1,9 +1,9 @@
 package ast.expressions;
 
-import ast.AbstractLocatable;
+import semantic.Visitor;
 import ast.type.Type;
 
-public class Cast extends AbstractLocatable implements Expression {
+public class Cast extends AbstractExpression {
     private Type targetType;
     private Expression expression;
 
@@ -19,6 +19,11 @@ public class Cast extends AbstractLocatable implements Expression {
 
     public Expression getExpression() {
         return expression;
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override

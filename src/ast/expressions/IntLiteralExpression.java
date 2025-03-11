@@ -1,8 +1,8 @@
 package ast.expressions;
 
-import ast.AbstractLocatable;
+import semantic.Visitor;
 
-public class IntLiteralExpression extends AbstractLocatable implements Expression {
+public class IntLiteralExpression extends AbstractExpression {
     private int value;
 
     public IntLiteralExpression(int value, int line, int column) {
@@ -12,6 +12,11 @@ public class IntLiteralExpression extends AbstractLocatable implements Expressio
 
     public int getValue() {
         return value;
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package ast.expressions;
 
-import ast.AbstractLocatable;
+import semantic.Visitor;
 
-public class UnaryMinusExpression extends AbstractLocatable implements Expression {
+public class UnaryMinusExpression extends AbstractExpression {
     private Expression expression;
 
     public UnaryMinusExpression(Expression expression, int line, int column) {
@@ -12,6 +12,11 @@ public class UnaryMinusExpression extends AbstractLocatable implements Expressio
 
     public Expression getExpression() {
         return expression;
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override

@@ -1,10 +1,7 @@
 package ast.program;
 
-import ast.AbstractLocatable;
+import semantic.Visitor;
 import ast.type.Type;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VariableDefinition extends AbstractDefinition {
     Type type;
@@ -17,6 +14,11 @@ public class VariableDefinition extends AbstractDefinition {
     }
     public Type getType() {
         return type;
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override

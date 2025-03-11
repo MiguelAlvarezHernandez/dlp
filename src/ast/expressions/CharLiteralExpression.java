@@ -1,8 +1,8 @@
 package ast.expressions;
 
-import ast.AbstractLocatable;
+import semantic.Visitor;
 
-public class CharLiteralExpression extends AbstractLocatable implements Expression {
+public class CharLiteralExpression extends AbstractExpression{
     private char value;
 
     public CharLiteralExpression(char value, int line, int column) {
@@ -15,10 +15,16 @@ public class CharLiteralExpression extends AbstractLocatable implements Expressi
     }
 
     @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
+    }
+
+    @Override
     public String toString() {
         return "CharLiteralExpression{" +
                 "value=" + value +
                 '}';
     }
+
 
 }

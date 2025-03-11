@@ -2,7 +2,7 @@ package ast.program;
 
 import ast.AbstractLocatable;
 
-public class AbstractDefinition extends AbstractLocatable implements Definition{
+public abstract class AbstractDefinition extends AbstractLocatable implements Definition{
     private String name;
 
     public AbstractDefinition(String name, int line, int column) {

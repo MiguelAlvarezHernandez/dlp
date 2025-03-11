@@ -1,12 +1,13 @@
 package ast.statements;
 
-import ast.AbstractLocatable;
+import ast.expressions.AbstractExpression;
 import ast.expressions.Expression;
 import ast.expressions.VariableExpression;
+import semantic.Visitor;
 
 import java.util.List;
 
-public class FunctionInvocation extends AbstractLocatable implements Statement, Expression  {
+public class FunctionInvocation extends AbstractExpression implements Statement  {
     private VariableExpression variable;
     private List<Expression> arguments;
 
@@ -14,6 +15,11 @@ public class FunctionInvocation extends AbstractLocatable implements Statement, 
         super(line, column);
         this.variable = variable;
         this.arguments = arguments;
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override

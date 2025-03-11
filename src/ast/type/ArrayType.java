@@ -1,5 +1,7 @@
 package ast.type;
 
+import semantic.Visitor;
+
 public class ArrayType implements Type {
     private int size;
     private Type elementType;
@@ -27,6 +29,11 @@ public class ArrayType implements Type {
         } else {
             return new ArrayType(elementType, size);
         }
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package ast.expressions;
 
-import ast.AbstractLocatable;
+import semantic.Visitor;
 
-public class IndexExpression extends AbstractLocatable implements Expression {
+public class IndexExpression extends AbstractExpression {
     private Expression array;
     private Expression index;
 
@@ -18,6 +18,11 @@ public class IndexExpression extends AbstractLocatable implements Expression {
 
     public Expression getIndex() {
         return index;
+    }
+
+    @Override
+    public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {
+        return v.visit(this,  p);
     }
 
     @Override
