@@ -39,4 +39,7 @@ public class StructType implements Type {
                 "recordFields=" + recordFields +
                 '}';
     }
+    public List<RecordField> getRecordFields() {
+        return recordFields;
+    }
 }

@@ -1,5 +1,6 @@
 import ast.errorhandler.ErrorHandler;
 import ast.program.Program;
+import semantic.IdentificationVisitor;
 import semantic.TypeCheckingVisitor;
 import introspector.model.IntrospectorModel;
 import introspector.view.IntrospectorView;
@@ -45,6 +46,7 @@ public class Main {
 		CmmParser parser = new CmmParser(tokens);
 		Program ast = parser.program().ast;
 		ast.accept(new TypeCheckingVisitor(), null);
+		ast.accept(new IdentificationVisitor(), null);
 		if (ErrorHandler.getInstance().anyErrors())
 			ErrorHandler.getInstance().showErrors(System.err);
 		else {

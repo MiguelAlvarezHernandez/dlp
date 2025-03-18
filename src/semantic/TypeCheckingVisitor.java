@@ -8,33 +8,9 @@ import ast.program.VariableDefinition;
 import ast.statements.*;
 import ast.type.*;
 
-public class TypeCheckingVisitor implements Visitor<Void,Void>{
+public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
 
-    @Override
-    public Void visit(Program program, Void param) {
-        for(Definition def: program.getDefinitions()){
-            def.accept(this, param);
-        }
-        return null;
-    }
 
-    @Override
-    public Void visit(FunctionDefinition functionDefinition, Void param) {
-        functionDefinition.getFunctionType().accept(this, param);
-        for(Definition def: functionDefinition.getVarDefinitions()){
-            def.accept(this, param);
-        }
-        for (Statement statement: functionDefinition.getStatements()){
-            statement.accept(this, param);
-        }
-        return null;
-    }
-
-    @Override
-    public Void visit(VariableDefinition variableDefinition, Void param) {
-        variableDefinition.getType().accept(this, param);
-        return null;
-    }
 
     @Override
     public Void visit(AssignmentStatement assignment, Void param) {
@@ -56,17 +32,6 @@ public class TypeCheckingVisitor implements Visitor<Void,Void>{
         return null;
     }
 
-    @Override
-    public Void visit(IfElseStatement ifElseStatement, Void param) {
-        ifElseStatement.getConditionExpression().accept(this, param);
-        for (Statement statement : ifElseStatement.getIfBody()){
-            statement.accept(this, param);
-        }
-        for (Statement statement : ifElseStatement.getElseBody()){
-            statement.accept(this, param);
-        }
-        return null;
-    }
 
     @Override
     public Void visit(ReadStatement readStatement, Void param) {
@@ -76,28 +41,6 @@ public class TypeCheckingVisitor implements Visitor<Void,Void>{
         }
         return null;
     }
-
-    @Override
-    public Void visit(ReturnStatement returnStatement, Void param) {
-        returnStatement.getReturnValue().accept(this, param);
-        return null;
-    }
-
-    @Override
-    public Void visit(WhileStatement whileStatement, Void param) {
-        whileStatement.getCondition().accept(this, param);
-        for (Statement statement : whileStatement.getBody()){
-            statement.accept(this, param);
-        }
-        return null;
-    }
-
-    @Override
-    public Void visit(WriteStatement writeStatement, Void param) {
-        writeStatement.getValueToWrite().accept(this, param);
-        return null;
-    }
-
 
 
 
@@ -200,53 +143,4 @@ public class TypeCheckingVisitor implements Visitor<Void,Void>{
         return null;
     }
 
-
-
-
-
-
-    @Override
-    public Void visit(ErrorType errorType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(ArrayType arrayType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(CharType charType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(DoubleType doubleType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(FunctionType functionType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(IntType intType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(RecordField recordField, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(StructType structType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(VoidType voidType, Void param) {
-        return null;
-    }
 }
