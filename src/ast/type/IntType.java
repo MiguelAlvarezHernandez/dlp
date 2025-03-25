@@ -2,7 +2,7 @@ package ast.type;
 
 import semantic.Visitor;
 
-public class IntType implements Type {
+public class IntType extends AbstractType {
 
     @Override
     public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {

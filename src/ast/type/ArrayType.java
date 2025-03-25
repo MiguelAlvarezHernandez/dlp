@@ -2,7 +2,7 @@ package ast.type;
 
 import semantic.Visitor;
 
-public class ArrayType implements Type {
+public class ArrayType extends AbstractType {
     private int size;
     private Type elementType;
     public ArrayType( Type elementType, int size) {

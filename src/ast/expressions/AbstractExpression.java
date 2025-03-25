@@ -1,9 +1,11 @@
 package ast.expressions;
 
 import ast.AbstractLocatable;
+import ast.type.Type;
 
 public abstract class AbstractExpression extends AbstractLocatable implements Expression{
     private boolean lvalue;
+    private Type type;
 
     public AbstractExpression(int line, int column) {
         super(line, column);
@@ -17,5 +19,13 @@ public abstract class AbstractExpression extends AbstractLocatable implements Ex
     @Override
     public void setLValue(boolean value) {
         this.lvalue=value;
+    }
+
+    @Override
+    public Type getType() {
+        return type;
+    }
+    public void setType(Type type) {
+        this.type = type;
     }
 }

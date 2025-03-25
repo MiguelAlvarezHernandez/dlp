@@ -4,11 +4,14 @@ import ast.AbstractLocatable;
 import ast.errorhandler.ErrorHandler;
 import semantic.Visitor;
 
-public class ErrorType extends AbstractLocatable implements Type {
+public class ErrorType extends AbstractType {
     String message;
+    int line;
+    int column;
     public ErrorType(int line, int column, String message) {
-        super(line, column);
         this.message = message;
+        this.line = line;
+        this.column = column;
         ErrorHandler.getInstance().addError(this);
     }
 
@@ -26,4 +29,11 @@ public class ErrorType extends AbstractLocatable implements Type {
                 '}';
     }
 
+    public int getColumn() {
+        return column;
+    }
+
+    public int getLine() {
+        return line;
+    }
 }

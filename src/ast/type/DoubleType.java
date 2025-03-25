@@ -2,7 +2,7 @@ package ast.type;
 
 import semantic.Visitor;
 
-public class DoubleType implements Type{
+public class DoubleType extends AbstractType{
 
     @Override
     public <TR, TP> TR accept(Visitor<TR, TP> v, TP p) {

@@ -2,7 +2,7 @@ package ast.type;
 
 import semantic.Visitor;
 
-public class VoidType implements Type {
+public class VoidType extends AbstractType {
 
     @Override
     public String toString() {

@@ -5,7 +5,7 @@ import semantic.Visitor;
 
 import java.util.List;
 
-public class FunctionType implements Type {
+public class FunctionType extends AbstractType {
     private Type returnType;
     private List<VariableDefinition> parameterTypes;
 

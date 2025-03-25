@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class StructType implements Type {
+public class StructType extends AbstractType {
     private List<RecordField> recordFields;
 
     public StructType( List<RecordField> recordFields) {
