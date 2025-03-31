@@ -1,6 +1,7 @@
 package ast.type;
 
 import ast.AbstractLocatable;
+import ast.Locatable;
 import ast.errorhandler.ErrorHandler;
 import semantic.Visitor;
 
@@ -43,7 +44,7 @@ public class ErrorType extends AbstractType {
     }
 
     @Override
-    public Type arithmetic(Type type) {
+    public Type arithmetic(Type type, Locatable loc) {
         return this;
     }
 }

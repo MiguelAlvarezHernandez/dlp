@@ -1,4 +1,4 @@
-// Generated from C:/Users/Miguel/IdeaProjects/dlp/src/parser/Cmm.g4 by ANTLR 4.13.2
+// Generated from C:/Users/ovied/IdeaProjects/dlp/src/parser/Cmm.g4 by ANTLR 4.13.2
 package parser;
 
     import ast.*;
@@ -539,7 +539,7 @@ public class CmmParser extends Parser {
 						match(T__8);
 						setState(129);
 						((ExpressionContext)_localctx).ID = match(ID);
-						((ExpressionContext)_localctx).ast =  new FieldAccessExpression(((ExpressionContext)_localctx).e1.ast, new VariableExpression(((ExpressionContext)_localctx).ID.getText(), ((ExpressionContext)_localctx).ID.getLine(), ((ExpressionContext)_localctx).ID.getCharPositionInLine()+1), ((ExpressionContext)_localctx).e1.ast.getLine(), ((ExpressionContext)_localctx).e1.ast.getColumn());
+						((ExpressionContext)_localctx).ast =  new FieldAccessExpression(((ExpressionContext)_localctx).e1.ast, (((ExpressionContext)_localctx).ID!=null?((ExpressionContext)_localctx).ID.getText():null), ((ExpressionContext)_localctx).e1.ast.getLine(), ((ExpressionContext)_localctx).e1.ast.getColumn());
 						}
 						break;
 					}

@@ -1,37 +1,38 @@
 package ast.type;
 
 import ast.ASTNode;
+import ast.Locatable;
 
 import java.util.List;
 
 public interface Type extends ASTNode {
-    void mustReturnedAs(Type returnType);
+    void mustReturnedAs(Type returnType, Locatable locatable);
 
-    Type assignment(Type type);
+    Type assignment(Type type, Locatable locatable);
 
-    Type parenthesis(List<Type> argTypes);
+    Type parenthesis(List<Type> argTypes, Locatable locatable);
 
-    void mustBeWritable();
+    void mustBeWritable(Locatable locatable);
 
-    void mustBeReadable();
+    void mustBeReadable(Locatable locatable);
 
-    void mustBeCondition();
+    void mustBeCondition(Locatable locatable);
 
-    Type arithmetic(Type type);
+    Type arithmetic(Type type, Locatable locatable);
 
-    Type arithmetic();
+    Type arithmetic(Locatable locatable);
 
-    Type mustBeCastFrom(Type type);
+    Type mustBeCastFrom(Type type, Locatable locatable);
 
-    Type squareBrackets(Type type);
+    Type squareBrackets(Type type, Locatable locatable);
 
-    Type relational(Type type);
+    Type relational(Type type, Locatable locatable);
 
-    Type accessField(Type type);
+    Type accessField(String fieldName, Locatable locatable);
 
-    Type logical(Type type);
+    Type logical(Type type, Locatable locatable);
 
-    Type modulus(Type type);
+    Type modulus(Type type, Locatable locatable);
 
 }
 

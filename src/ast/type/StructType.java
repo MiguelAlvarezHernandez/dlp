@@ -1,5 +1,6 @@
 package ast.type;
 
+import ast.Locatable;
 import semantic.Visitor;
 
 import java.util.HashSet;
@@ -42,4 +43,14 @@ public class StructType extends AbstractType {
     public List<RecordField> getRecordFields() {
         return recordFields;
     }
+
+    public Type accessField(String fieldName, Locatable locatable) {
+        for (RecordField recordField : recordFields) {
+            if (recordField.getName().equals(fieldName)) {
+                return recordField.getFieldType();
+            }
+        }
+        return new ErrorType(locatable.getLine(), locatable.getColumn(),"Field '" + fieldName + "' not found in struct.");
+    }
+
 }

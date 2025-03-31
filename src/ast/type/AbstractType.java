@@ -1,77 +1,85 @@
 package ast.type;
 
+import ast.Locatable;
+
 import java.util.List;
 
 public abstract class AbstractType implements Type{
 
     @Override
-    public Type arithmetic(Type type) {
-        return new ErrorType("Invalid arithmetic operation");
+    public Type arithmetic(Type type, Locatable locatable) {
+        return new ErrorType(locatable.getLine(),locatable.getColumn(),"Invalid arithmetic operation");
     }
 
     @Override
-    public Type arithmetic() {
-        return new ErrorType("Invalid arithmetic operation");
+    public Type arithmetic(Locatable locatable) {
+        return new ErrorType(locatable.getLine(),locatable.getColumn(),"Invalid arithmetic operation");
     }
 
     @Override
-    public Type modulus(Type type) {
-        return new ErrorType("Invalid modulus operation");
+    public Type modulus(Type type, Locatable locatable) {
+        return new ErrorType(locatable.getLine(),locatable.getColumn(),"Invalid modulus operation");
     }
 
     @Override
-    public Type logical(Type type) {
-        return new ErrorType("Invalid logical operation");
+    public Type logical(Type type, Locatable locatable) {
+        return new ErrorType(locatable.getLine(),locatable.getColumn(),"Invalid logical operation");
     }
 
     @Override
-    public void mustReturnedAs(Type type) {
-        new ErrorType("Invalid return value");
+    public void mustReturnedAs(Type type, Locatable locatable) {
+        new ErrorType(locatable.getLine(),locatable.getColumn(),"Invalid return value");
     }
 
     @Override
-    public Type assignment(Type type) {
-        return new ErrorType("Invalid assignment operation");
+    public Type assignment(Type type, Locatable locatable) {
+        return new ErrorType(locatable.getLine(),locatable.getColumn(),"Invalid assignment operation");
     }
 
     @Override
-    public Type relational(Type type) {
-        return new ErrorType("Invalid relational operation");
+    public Type relational(Type type, Locatable locatable) {
+        return new ErrorType(locatable.getLine(),locatable.getColumn(),"Invalid relational operation");
     }
 
     @Override
-    public Type mustBeCastFrom(Type type) {
-        return new ErrorType("Invalid cast operation");
+    public Type mustBeCastFrom(Type type, Locatable locatable) {
+        return new ErrorType(locatable.getLine(),locatable.getColumn(),"Invalid cast operation");
     }
 
     @Override
-    public Type squareBrackets(Type type) {
-        return new ErrorType("Invalid indexing operation");
+    public Type squareBrackets(Type type, Locatable locatable) {
+        return new ErrorType(locatable.getLine(),locatable.getColumn(),"Invalid indexing operation");
     }
 
     @Override
-    public Type accessField(Type field) {
-        return new ErrorType("Invalid field access");
+    public Type accessField(String fieldName, Locatable locatable) {
+        return new ErrorType(locatable.getLine(),locatable.getColumn(),"Invalid field access");
     }
 
     @Override
-    public Type parenthesis(List<Type> arguments) {
-        return new ErrorType("Invalid function invocation");
+    public Type parenthesis(List<Type> arguments, Locatable locatable) {
+        return new ErrorType(locatable.getLine(),locatable.getColumn(),"Invalid function invocation");
     }
 
     @Override
-    public void mustBeCondition() {
-        new ErrorType("Condition must be of type int");
+    public void mustBeCondition(Locatable locatable) {
+        new ErrorType(locatable.getLine(),locatable.getColumn(),"Condition must be of type int");
     }
 
     @Override
-    public void mustBeReadable() {
-        new ErrorType("Expression must be readable");
+    public void mustBeReadable(Locatable locatable) {
+        new ErrorType(locatable.getLine(),locatable.getColumn(),"Expression must be readable");
     }
 
     @Override
-    public void mustBeWritable() {
-        new ErrorType("Expression must be writable");
+    public void mustBeWritable(Locatable locatable) {
+        new ErrorType(locatable.getLine(),locatable.getColumn(),"Expression must be writable");
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        return this.getClass() == obj.getClass();
     }
 
 }

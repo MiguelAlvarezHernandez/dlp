@@ -1,5 +1,6 @@
 package ast.type;
 
+import ast.Locatable;
 import ast.program.VariableDefinition;
 import semantic.Visitor;
 
@@ -34,5 +35,19 @@ public class FunctionType extends AbstractType {
                 "returnType=" + returnType +
                 ", parameterTypes=" + parameterTypes +
                 '}';
+    }
+
+    @Override
+    public Type parenthesis(List<Type> argTypes, Locatable locatable) {
+        if (argTypes.size() != parameterTypes.size()) {
+            return new ErrorType(locatable.getLine(), locatable.getColumn(),"Incorrect number of arguments in function call.");
+        }
+        for (int i = 0; i < argTypes.size(); i++) {
+
+            if (!argTypes.get(i).equals(parameterTypes.get(i).getType())) {
+                return new ErrorType(locatable.getLine(), locatable.getColumn(),"Argument type mismatch at position " + i + ".");
+            }
+        }
+        return returnType;
     }
 }
