@@ -45,7 +45,7 @@ public class Main {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		CmmParser parser = new CmmParser(tokens);
 		Program ast = parser.program().ast;
-		ast.accept(new TypeCheckingVisitor(), null);
+		//ast.accept(new TypeCheckingVisitor(), null);
 		ast.accept(new IdentificationVisitor(), null);
 		if (ErrorHandler.getInstance().anyErrors())
 			ErrorHandler.getInstance().showErrors(System.err);

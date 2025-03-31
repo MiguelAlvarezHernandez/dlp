@@ -4,7 +4,7 @@ import ast.AbstractLocatable;
 import ast.expressions.Expression;
 import semantic.Visitor;
 
-public class AssignmentStatement extends AbstractLocatable implements Statement {
+public class AssignmentStatement extends AbstractStatement {
     private Expression left;  // Nombre de la variable
     private Expression right;     // Valor a asignar
 

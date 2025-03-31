@@ -4,7 +4,7 @@ import ast.AbstractLocatable;
 import ast.expressions.Expression;
 import semantic.Visitor;
 
-public class WriteStatement extends AbstractLocatable implements Statement {
+public class WriteStatement extends AbstractStatement {
     private Expression valueToWrite;
 
 

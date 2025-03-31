@@ -11,6 +11,53 @@ public class CharType extends AbstractType{
 
     @Override
     public String toString() {
-        return "CharType{}";
+        return "CharType";
     }
+
+    @Override
+    public Type arithmetic(Type type) {
+        if(type instanceof CharType) {
+            return this;
+        }
+        if(type instanceof ErrorType) {
+            return this;
+        }
+        return super.arithmetic(type);
+    }
+
+    @Override
+    public Type modulus(Type type) {
+        if(type instanceof CharType) {
+            return this;
+        }
+        if(type instanceof ErrorType) {
+            return this;
+        }
+        return super.modulus(type);
+    }
+
+    @Override
+    public Type relational(Type type) {
+        if(type instanceof CharType) {
+            return new IntType();
+        }
+        if(type instanceof ErrorType) {
+            return this;
+        }
+        return super.relational(type);
+    }
+
+    @Override
+    public Type arithmetic() {
+        return new IntType();
+    }
+
+    @Override
+    public Type mustBeCastFrom(Type type) {
+        if (type instanceof DoubleType || type instanceof CharType || type instanceof IntType) {
+            return this;
+        }
+        return super.mustBeCastFrom(type);
+    }
+
 }

@@ -8,6 +8,10 @@ import ast.program.VariableDefinition;
 import ast.statements.*;
 import ast.type.*;
 
+import javax.management.relation.RelationType;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
 
     //Arithmetic -> expression1.type = expression2.type.arithmetic(expression3.type)
@@ -33,6 +37,12 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
 
     //P: RelationalExpression: expression1 -> expression2 expression3
     //R: expression1.type= expression2.type.relational(expression3.type)
+
+    //P: LogicalExpression: expression1 -> expression2 expression3
+    //R: expression1.type= expression2.type.logical(expression3.type)
+
+    //P: ModuleExpression: expression1 -> expression2 expression3
+    //R: expression1.type= expression2.type.module(expression3.type)
 
     //P UnaryMinusExpression: expression1 -> expression2
     //R: expression1.type = expression2.type.arithmetic()
@@ -72,12 +82,48 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
 
 
     @Override
-    public Void visit(AssignmentStatement assignment, Void param) {
-        assignment.getLeft().accept(this, param);
-        assignment.getRight().accept(this, param);
-        if(!assignment.getLeft().getLValue())
-            new ErrorType(assignment.getLine(),assignment.getColumn(),
+    public Void visit(FunctionDefinition funcDefinition, Void param) {
+        funcDefinition.getFunctionType().accept(this, param);
+
+        for (VariableDefinition varDef : funcDefinition.getVarDefinitions()) {
+            varDef.accept(this, param);
+        }
+
+        for (Statement stmt : funcDefinition.getStatements()) {
+            stmt.accept(this, param);
+            // Rule: statement*.forEach(stmt -> stmt.returnType = type.returnType)
+            stmt.setReturnType(funcDefinition.getFunctionType().getReturnType());
+        }
+
+        return null;
+    }
+
+
+
+
+    @Override
+    public Void visit(ReturnStatement returnStatement, Void param) {
+        returnStatement.getReturnValue().accept(this, param);
+
+        // Regla: expression.type.mustReturnedAs(statement.returnType)
+        Type returnType = returnStatement.getReturnValue().getType();
+        returnType.mustReturnedAs(returnStatement.getReturnType());
+
+        return null;
+    }
+
+    @Override
+    public Void visit(AssignmentStatement assignmentStatement, Void param) {
+        assignmentStatement.getLeft().accept(this, param);
+        assignmentStatement.getRight().accept(this, param);
+        if(!assignmentStatement.getLeft().getLValue())
+            new ErrorType(assignmentStatement.getLine(),assignmentStatement.getColumn(),
                     "L-Value is wrong");
+
+        Type resultType = assignmentStatement.getLeft().getType().assignment(
+                assignmentStatement.getRight().getType()
+        );
+        assignmentStatement.setReturnType(new VoidType());
         return null;
     }
 
@@ -88,6 +134,14 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
             expr.accept(this, param);
         }
         functionInvocation.setLValue(false);
+
+        Type functionType = functionInvocation.getVariable().getType();
+        List<Type> argTypes = functionInvocation.getArguments().stream()
+                .map(arg -> arg.getType())
+                .collect(Collectors.toList());
+
+        Type resultType = functionType.parenthesis(argTypes);
+        functionInvocation.setType(resultType);
         return null;
     }
 
@@ -98,9 +152,42 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
         if(!readStatement.getValueToRead().getLValue()){
             new ErrorType(readStatement.getLine(), readStatement.getColumn(), "L-Value is wrong");
         }
+
+        Type exprType = readStatement.getValueToRead().getType();
+        exprType.mustBeReadable();
         return null;
     }
 
+    @Override
+    public Void visit(IfElseStatement ifElseStatement, Void param) {
+        ifElseStatement.getConditionExpression().accept(this, param);
+
+        Type conditionType = ifElseStatement.getConditionExpression().getType();
+        conditionType.mustBeCondition();
+
+        for (Statement stmt : ifElseStatement.getIfBody()) {
+            stmt.accept(this, param);
+            stmt.setReturnType(ifElseStatement.getReturnType());
+        }
+
+        for (Statement stmt : ifElseStatement.getElseBody()) {
+            stmt.accept(this, param);
+            stmt.setReturnType(ifElseStatement.getReturnType());
+        }
+        return null;
+    }
+
+    @Override
+    public Void visit(WriteStatement writeStatement, Void param) {
+        writeStatement.getValueToWrite().accept(this, param);
+        if(!writeStatement.getValueToWrite().getLValue()){
+            new ErrorType(writeStatement.getLine(), writeStatement.getColumn(), "L-Value is wrong");
+        }
+
+        Type exprType = writeStatement.getValueToWrite().getType();
+        exprType.mustBeWritable();
+        return null;
+    }
 
 
 
@@ -114,6 +201,10 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
         arithmeticExpression.getRight().accept(this, param);
         arithmeticExpression.setLValue(false);
 
+        Type resultType = arithmeticExpression.getLeft().getType().arithmetic(
+                arithmeticExpression.getRight().getType());
+        arithmeticExpression.setType(resultType);
+
         return null;
     }
 
@@ -121,12 +212,18 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
     public Void visit(Cast castExpression, Void param) {
         castExpression.getExpression().accept(this, param);
         castExpression.setLValue(false);
+
+        Type resultType = castExpression.getType().mustBeCastFrom(
+                castExpression.getExpression().getType()
+        );
+        castExpression.setType(resultType);
         return null;
     }
 
     @Override
     public Void visit(CharLiteralExpression charLiteralExpression, Void param) {
         charLiteralExpression.setLValue(false);
+        charLiteralExpression.setType(new CharType());
         return null;
     }
 
@@ -136,6 +233,8 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
         indexExpression.getIndex().accept(this, param);
         indexExpression.getArray().accept(this, param);
         indexExpression.setLValue(true);
+        Type resultType = indexExpression.getArray().getType().squareBrackets(indexExpression.getIndex().getType());
+        indexExpression.setType(resultType);
         return null;
     }
 
@@ -143,12 +242,18 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
     public Void visit(FieldAccessExpression fieldAccessExpression, Void param) {
         fieldAccessExpression.getRecord().accept(this, param);
         fieldAccessExpression.setLValue(true);
+
+        Type resultType = fieldAccessExpression.getRecord().getType().accessField(
+                fieldAccessExpression.getField().getType()
+        );
+        fieldAccessExpression.setType(resultType);
         return null;
     }
 
     @Override
     public Void visit(IntLiteralExpression intLiteralExpression, Void param) {
         intLiteralExpression.setLValue(false);
+        intLiteralExpression.setType(new IntType());
         return null;
     }
 
@@ -157,6 +262,10 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
         logicalExpression.getLeft().accept(this, param);
         logicalExpression.getRight().accept(this, param);
         logicalExpression.setLValue(false);
+
+        Type resultType = logicalExpression.getLeft().getType().relational(
+                logicalExpression.getRight().getType());
+        logicalExpression.setType(resultType);
         return null;
     }
 
@@ -165,6 +274,11 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
         moduleExpression.getLeft().accept(this, param);
         moduleExpression.getRight().accept(this, param);
         moduleExpression.setLValue(false);
+
+        Type resultType = moduleExpression.getLeft().getType().relational(
+                moduleExpression.getRight().getType());
+        moduleExpression.setType(resultType);
+
         return null;
     }
 
@@ -178,6 +292,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
     @Override
     public Void visit(RealLiteralExpression realLiteralExpression, Void param) {
         realLiteralExpression.setLValue(false);
+        realLiteralExpression.setType(new DoubleType());
         return null;
     }
 
@@ -186,6 +301,10 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
         relationalExpression.getLeft().accept(this, param);
         relationalExpression.getRight().accept(this, param);
         relationalExpression.setLValue(false);
+
+        Type resultType = relationalExpression.getLeft().getType().relational(
+                relationalExpression.getRight().getType());
+        relationalExpression.setType(resultType);
         return null;
     }
 
@@ -193,13 +312,26 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
     public Void visit(UnaryMinusExpression unaryMinusExpression, Void param) {
         unaryMinusExpression.getExpression().accept(this, param);
         unaryMinusExpression.setLValue(false);
+
+        Type resultType = unaryMinusExpression.getExpression().getType().arithmetic();
+        unaryMinusExpression.setType(resultType);
         return null;
     }
 
     @Override
     public Void visit(VariableExpression variableExpression, Void param) {
         variableExpression.setLValue(true);
+
+        if (variableExpression.getDefinition() == null) {
+            // Regla: expression.type = expression.definition != null ? expression.type.definition : new ErrorType("Var " + ID + " is not defined")
+            new ErrorType(variableExpression.getLine(), variableExpression.getColumn(),
+                    "Variable " + variableExpression.getName() + " is not defined.");
+        } else {
+            variableExpression.setType(variableExpression.getDefinition().getType());
+        }
         return null;
     }
+
+
 
 }

@@ -6,7 +6,7 @@ import semantic.Visitor;
 
 import java.util.List;
 
-public class WhileStatement extends AbstractLocatable implements Statement {
+public class WhileStatement extends AbstractStatement {
     private Expression condition;
     private List<Statement> body;
 

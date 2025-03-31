@@ -1,10 +1,12 @@
 package ast.program;
 
 import ast.AbstractLocatable;
+import ast.type.Type;
 
 public abstract class AbstractDefinition extends AbstractLocatable implements Definition{
     private String name;
-    int scope;
+    private int scope;
+    private Type type;
 
 
     public AbstractDefinition(String name, int line, int column) {
@@ -18,6 +20,12 @@ public abstract class AbstractDefinition extends AbstractLocatable implements De
     public void setScope(int scope) {
         this.scope = scope;
     }
+    public Type getType() {
+        return this.type;
+    }
+    public void setType(Type type) {
+        this.type = type;
+    }
 
     @Override
     public String getName() {
@@ -30,4 +38,6 @@ public abstract class AbstractDefinition extends AbstractLocatable implements De
                 "name='" + name + '\'' +
                 '}';
     }
+
+
 }

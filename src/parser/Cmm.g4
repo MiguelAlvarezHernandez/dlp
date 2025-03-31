@@ -38,7 +38,8 @@ expression returns [Expression ast]:
           | e1=expression '[' e2=expression ']'
           {$ast = new IndexExpression($e1.ast, $e2.ast, $e1.ast.getLine(), $e1.ast.getColumn());}
           | e1=expression '.' ID
-           {$ast = new FieldAccessExpression($e1.ast, $ID.text, $e1.ast.getLine(), $e1.ast.getColumn());}
+          //{$ast = new FieldAccessExpression($e1.ast, $ID.text, $e1.ast.getLine(), $e1.ast.getColumn());}
+          {$ast = new FieldAccessExpression($e1.ast, new VariableExpression($ID.getText(), $ID.getLine(), $ID.getCharPositionInLine()+1), $e1.ast.getLine(), $e1.ast.getColumn());}
           | p1='(' t1=primitive_type p2=')' e1=expression
           {$ast = new Cast($t1.ast, $e1.ast, $p1.getLine(), $p1.getCharPositionInLine()+1);}
           | op='-' e1=expression

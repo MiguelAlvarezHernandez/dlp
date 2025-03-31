@@ -6,7 +6,7 @@ import semantic.Visitor;
 
 import java.util.List;
 
-public class IfElseStatement extends AbstractLocatable implements Statement {
+public class IfElseStatement extends AbstractStatement {
 //    public IfElseStatement(List<Statement> ifBody, Expression conditionExpression, int line, int column) {
 //        super(line, column);
 //        this.ifBody = ifBody;

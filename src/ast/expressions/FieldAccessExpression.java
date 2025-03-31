@@ -4,9 +4,10 @@ import semantic.Visitor;
 
 public class FieldAccessExpression extends AbstractExpression {
     private Expression record;
-    private String field;
+    //private String field;
+    private VariableExpression field;
 
-    public FieldAccessExpression(Expression record, String field, int line, int column) {
+    public FieldAccessExpression(Expression record, VariableExpression field, int line, int column) {
         super(line, column);
         this.record = record;
         this.field = field;
@@ -16,7 +17,7 @@ public class FieldAccessExpression extends AbstractExpression {
         return record;
     }
 
-    public String getField() {
+    public Expression getField() {
         return field;
     }
 

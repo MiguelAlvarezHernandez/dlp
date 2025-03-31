@@ -8,6 +8,11 @@ public class ErrorType extends AbstractType {
     String message;
     int line;
     int column;
+
+    public ErrorType( String message) {
+        this.message = message;
+        ErrorHandler.getInstance().addError(this);
+    }
     public ErrorType(int line, int column, String message) {
         this.message = message;
         this.line = line;
@@ -35,5 +40,10 @@ public class ErrorType extends AbstractType {
 
     public int getLine() {
         return line;
+    }
+
+    @Override
+    public Type arithmetic(Type type) {
+        return this;
     }
 }

@@ -3,6 +3,7 @@ package ast.statements;
 import ast.expressions.AbstractExpression;
 import ast.expressions.Expression;
 import ast.expressions.VariableExpression;
+import ast.type.Type;
 import semantic.Visitor;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 public class FunctionInvocation extends AbstractExpression implements Statement  {
     private VariableExpression variable;
     private List<Expression> arguments;
+    private Type returnType;
 
     public FunctionInvocation(VariableExpression variable, List<Expression> arguments, int line, int column) {
         super(line, column);
@@ -36,6 +38,16 @@ public class FunctionInvocation extends AbstractExpression implements Statement 
                 "variable=" + variable +
                 ", arguments=" + arguments +
                 '}';
+    }
+
+    @Override
+    public Type getReturnType() {
+        return returnType;
+    }
+
+    @Override
+    public void setReturnType(Type returnType) {
+        this.returnType = returnType;
     }
 }
 

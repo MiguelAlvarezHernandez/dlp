@@ -4,7 +4,7 @@ import ast.AbstractLocatable;
 import ast.expressions.Expression;
 import semantic.Visitor;
 
-public class ReturnStatement extends AbstractLocatable implements Statement {
+public class ReturnStatement extends AbstractStatement {
 
     private Expression returnValue;
 

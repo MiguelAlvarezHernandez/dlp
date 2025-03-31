@@ -43,4 +43,14 @@ public class ArrayType extends AbstractType {
                 ", elementType=" + elementType +
                 '}';
     }
+
+
+    @Override
+    public Type squareBrackets(Type type) {
+        if (type instanceof IntType) {
+            return elementType;
+        }
+        return super.squareBrackets(type);
+    }
+
 }
