@@ -182,14 +182,29 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
     @Override
     public Void visit(WriteStatement writeStatement, Void param) {
         writeStatement.getValueToWrite().accept(this, param);
-        if(!writeStatement.getValueToWrite().getLValue()){
-            new ErrorType(writeStatement.getLine(), writeStatement.getColumn(), "L-Value is wrong");
-        }
+
+
 
         Type exprType = writeStatement.getValueToWrite().getType();
         exprType.mustBeWritable(writeStatement);
         return null;
     }
+
+    @Override
+    public Void visit(WhileStatement whileStatement, Void param) {
+        whileStatement.getCondition().accept(this, param);
+
+        Type conditionType = whileStatement.getCondition().getType();
+        conditionType.mustBeCondition(whileStatement);
+
+        for (Statement stmt : whileStatement.getBody()) {
+            stmt.accept(this, param);
+            stmt.setReturnType(whileStatement.getReturnType());
+        }
+
+        return null;
+    }
+
 
 
 
@@ -288,6 +303,10 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
     public Void visit(NegationExpression negationExpression, Void param) {
         negationExpression.getExpression().accept(this, param);
         negationExpression.setLValue(false);
+        Type resultType = negationExpression.getExpression().getType();
+        resultType.mustBeCondition(negationExpression);
+
+        negationExpression.setType(resultType);
         return null;
     }
 

@@ -10,10 +10,6 @@ public class ErrorType extends AbstractType {
     int line;
     int column;
 
-    public ErrorType( String message) {
-        this.message = message;
-        ErrorHandler.getInstance().addError(this);
-    }
     public ErrorType(int line, int column, String message) {
         this.message = message;
         this.line = line;
