@@ -53,4 +53,11 @@ public class StructType extends AbstractType {
         return new ErrorType(locatable.getLine(), locatable.getColumn(),"Field '" + fieldName + "' not found in struct.");
     }
 
+
+
+
+    @Override
+    public int numberOfBytes() {
+        return this.getRecordFields().stream().mapToInt(rf-> rf.getFieldType().numberOfBytes()).sum();
+    }
 }

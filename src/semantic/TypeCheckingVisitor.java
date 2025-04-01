@@ -345,8 +345,8 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Void>{
 
         if (variableExpression.getDefinition() == null) {
             // Regla: expression.type = expression.definition != null ? expression.type.definition : new ErrorType("Var " + ID + " is not defined")
-            new ErrorType(variableExpression.getLine(), variableExpression.getColumn(),
-                    "Variable " + variableExpression.getName() + " is not defined.");
+            variableExpression.setType(new ErrorType(variableExpression.getLine(), variableExpression.getColumn(),
+                    "Variable " + variableExpression.getName() + " is not defined."));
         } else {
             variableExpression.setType(variableExpression.getDefinition().getType());
         }

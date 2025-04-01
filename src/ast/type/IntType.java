@@ -99,5 +99,9 @@ public class IntType extends AbstractType {
     }
 
 
+    public int numberOfBytes() {
+        return 2;
+    }
+
 
 }

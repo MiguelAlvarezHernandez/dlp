@@ -82,4 +82,10 @@ public abstract class AbstractType implements Type{
         return this.getClass() == obj.getClass();
     }
 
+
+    @Override
+    public int numberOfBytes() {
+        return 0;
+    }
+
 }

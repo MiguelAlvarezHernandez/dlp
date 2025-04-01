@@ -47,9 +47,7 @@ public class IdentificationVisitor extends AbstractVisitor<Void, Void> {
     @Override
     public Void visit(VariableExpression variableExpression, Void param) {
         Definition def = symbolTable.find(variableExpression.getName());
-        if(def == null){
-            new ErrorType(variableExpression.getLine(), variableExpression.getColumn(),"The variable " + variableExpression.getName() + " was not defined");
-        }else{
+        if(def != null){
             variableExpression.setDefinition(def);
         }
         return null;

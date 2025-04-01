@@ -1,6 +1,7 @@
 import ast.errorhandler.ErrorHandler;
 import ast.program.Program;
 import semantic.IdentificationVisitor;
+import semantic.OffsetVisitor;
 import semantic.TypeCheckingVisitor;
 import introspector.model.IntrospectorModel;
 import introspector.view.IntrospectorView;
@@ -47,6 +48,8 @@ public class Main {
 		Program ast = parser.program().ast;
 		ast.accept(new IdentificationVisitor(), null);
 		ast.accept(new TypeCheckingVisitor(), null);
+		ast.accept(new OffsetVisitor(), null);
+
 		if (ErrorHandler.getInstance().anyErrors())
 			ErrorHandler.getInstance().showErrors(System.err);
 		else {

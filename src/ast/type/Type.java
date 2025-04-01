@@ -34,5 +34,7 @@ public interface Type extends ASTNode {
 
     Type modulus(Type type, Locatable locatable);
 
+    int numberOfBytes();
+
 }
 

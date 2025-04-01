@@ -7,6 +7,7 @@ public abstract class AbstractDefinition extends AbstractLocatable implements De
     private String name;
     private int scope;
     private Type type;
+    int offset;
 
 
     public AbstractDefinition(String name, int line, int column) {
@@ -25,6 +26,12 @@ public abstract class AbstractDefinition extends AbstractLocatable implements De
     }
     public void setType(Type type) {
         this.type = type;
+    }
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+    public int getOffset() {
+        return this.offset;
     }
 
     @Override
