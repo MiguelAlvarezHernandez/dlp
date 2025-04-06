@@ -40,14 +40,6 @@ public class FunctionInvocation extends AbstractExpression implements Statement 
                 '}';
     }
 
-    @Override
-    public Type getReturnType() {
-        return returnType;
-    }
 
-    @Override
-    public void setReturnType(Type returnType) {
-        this.returnType = returnType;
-    }
 }
 
