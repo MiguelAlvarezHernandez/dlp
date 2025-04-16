@@ -10,4 +10,8 @@ public interface Definition extends Locatable {
     void setScope(int scope);
 
     Type getType();
+
+    int getScope();
+
+    int getOffset();
 }

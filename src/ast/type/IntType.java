@@ -98,9 +98,23 @@ public class IntType extends AbstractType {
         return super.arithmetic(type, locatable);
     }
 
-
+    @Override
     public int numberOfBytes() {
         return 2;
+    }
+
+
+    @Override
+    public String suffix(){
+        return "i";
+    }
+
+    @Override
+    public Type superType(Type other) {
+        if (other instanceof DoubleType) {
+            return new DoubleType();
+        }
+        return this;
     }
 
 

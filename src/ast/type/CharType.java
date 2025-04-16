@@ -89,4 +89,19 @@ public class CharType extends AbstractType{
     public int numberOfBytes() {
         return 1;
     }
+
+    @Override
+    public String suffix(){
+        return "b";
+    }
+
+    @Override
+    public Type superType(Type other) {
+        if (other instanceof DoubleType) {
+            return new DoubleType();
+        } else if (other instanceof IntType) {
+            return new IntType();
+        }
+        return this;
+    }
 }

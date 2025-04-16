@@ -80,4 +80,14 @@ public class DoubleType extends AbstractType{
         return 4;
     }
 
+
+    @Override
+    public String suffix(){
+        return "f";
+    }
+
+    @Override
+    public Type superType(Type other) {
+        return this;
+    }
 }

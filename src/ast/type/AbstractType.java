@@ -88,4 +88,13 @@ public abstract class AbstractType implements Type{
         return 0;
     }
 
+    @Override
+    public String suffix(){
+      return "";
+    }
+    @Override
+    public Type superType(Type type){
+        return null;
+    }
+
 }
