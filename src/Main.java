@@ -1,5 +1,9 @@
 import ast.errorhandler.ErrorHandler;
 import ast.program.Program;
+import codegeneration.AddressCGVisitor;
+import codegeneration.CodeGenerator;
+import codegeneration.ExecuteCGVisitor;
+import codegeneration.ValueCGVisitor;
 import semantic.IdentificationVisitor;
 import semantic.OffsetVisitor;
 import semantic.TypeCheckingVisitor;
@@ -57,6 +61,18 @@ public class Main {
 			IntrospectorModel model=new IntrospectorModel(
 					"Program", ast);
 			new IntrospectorView("Introspector", model);
+
+
+			CodeGenerator cg = new CodeGenerator("output.txt");
+			AddressCGVisitor addressVisitor = new AddressCGVisitor(cg);
+			ValueCGVisitor valueVisitor = new ValueCGVisitor(cg, addressVisitor);
+			ExecuteCGVisitor executeVisitor = new ExecuteCGVisitor(cg, valueVisitor, addressVisitor);
+
+			ast.accept(executeVisitor, null);
+
+			cg.close();
+
+			System.out.println("Code generation completed successfully.");
 		}
 	}
 

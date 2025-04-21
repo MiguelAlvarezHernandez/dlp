@@ -58,10 +58,10 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,Void> {
     private final ValueCGVisitor valueCGVisitor;
     private final AddressCGVisitor addressCGVisitor;
 
-    public ExecuteCGVisitor(CodeGenerator cg) {
+    public ExecuteCGVisitor(CodeGenerator cg, ValueCGVisitor valueCGVisitor, AddressCGVisitor addressCGVisitor) {
         this.cg = cg;
-        this.valueCGVisitor = new ValueCGVisitor(cg);
-        this.addressCGVisitor = new AddressCGVisitor(cg);
+        this.valueCGVisitor = valueCGVisitor;
+        this.addressCGVisitor = addressCGVisitor;
     }
 
     @Override

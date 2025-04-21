@@ -67,9 +67,12 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void,Void>{
     //}
 
     private final CodeGenerator cg;
+    private final AddressCGVisitor addressCGVisitor;
 
-    public ValueCGVisitor(CodeGenerator cg) {
+
+    public ValueCGVisitor(CodeGenerator cg, AddressCGVisitor addressCGVisitor) {
         this.cg = cg;
+        this.addressCGVisitor = addressCGVisitor;
     }
 
     @Override
@@ -97,7 +100,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void,Void>{
 
     @Override
     public Void visit(VariableExpression var, Void param) {
-        new AddressCGVisitor(cg).visit(var, param);  // Usamos accept en lugar de visit
+        addressCGVisitor.visit(var, param);  // Usamos accept en lugar de visit
         cg.load(var.getType());
         return null;
     }
