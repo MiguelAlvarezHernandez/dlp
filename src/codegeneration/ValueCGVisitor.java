@@ -66,6 +66,16 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void,Void>{
     //      case "<=": <le> superType.suffix() break;
     //}
 
+    /*
+    value[[Index: expression1 -> expression2 expression3]] =
+        address[[expression1]]
+        <load> expression1.type.suffix()
+
+    value[[FieldAccess: expression1 -> expression1 -> expression2 ID]] =
+        address[[expression1]]
+        <load> expression1.suffix()
+     */
+
     private final CodeGenerator cg;
     private final AddressCGVisitor addressCGVisitor;
 
@@ -73,6 +83,20 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void,Void>{
     public ValueCGVisitor(CodeGenerator cg, AddressCGVisitor addressCGVisitor) {
         this.cg = cg;
         this.addressCGVisitor = addressCGVisitor;
+    }
+
+    @Override
+    public Void visit(IndexExpression indexExpression, Void param) {
+        addressCGVisitor.visit(indexExpression, param);
+        cg.load(indexExpression.getType());
+        return null;
+    }
+
+    @Override
+    public Void visit(FieldAccessExpression fieldAccessExpression, Void param) {
+        addressCGVisitor.visit(fieldAccessExpression, param);
+        cg.load(fieldAccessExpression.getType());
+        return null;
     }
 
     @Override

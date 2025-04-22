@@ -1,5 +1,6 @@
 package codegeneration;
 
+import ast.expressions.IndexExpression;
 import ast.expressions.VariableExpression;
 
 public class AddressCGVisitor extends AbstractCGVisitor<Void,Void>{
@@ -13,11 +14,33 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void,Void>{
     //          <addi>
     //      }
 
+    /*
+        address[[Index: expression1 -> expression2 expression3]] =
+            address[[expression2]]
+            value[[expression3]]
+            <pushi> expression1.type.numberOfBytes()
+            <muli>
+            <addi>
+
+        address[[FieldAccessExpression expression1 -> expression2 ID]]
+            address[[expression2]]
+            <pushi> expression2.type.findField(ID).offset
+            <addi>
+     */
+
 
     private final CodeGenerator cg;
 
+
     public AddressCGVisitor(CodeGenerator cg) {
         this.cg = cg;
+    }
+
+    @Override
+    public Void visit(IndexExpression var, Void param) {
+        var.getArray().accept(this,null);
+
+        return null;
     }
 
     @Override

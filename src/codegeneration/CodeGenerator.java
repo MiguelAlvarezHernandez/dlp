@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 public class CodeGenerator {
 
     private PrintWriter out;
+    private int numberLabel;
 
     public CodeGenerator(String outputFilename) {
         try {
@@ -176,5 +177,28 @@ public class CodeGenerator {
         } else {
             throw new IllegalArgumentException("Cannot convert char to " + targetType.getClass().getSimpleName());
         }
+    }
+
+    public void nextLabel() {
+        numberLabel++;
+    }
+
+    public String getCurrentLabel() {
+        return "label" + numberLabel;
+    }
+
+    public void jump(String jumpType, String label) {
+        switch (jumpType) {
+            case "jmp": out.println("\tjmp label"); break;
+            case "jz": out.println("\tjz label"); break;
+            case "jnz": out.println("\tjnz label"); break;
+            default: throw new IllegalArgumentException("It is not supported this type of jump");
+
+
+        }
+    }
+
+    public void commentLabel(String exitLabel) {
+        out.println(exitLabel +":");
     }
 }

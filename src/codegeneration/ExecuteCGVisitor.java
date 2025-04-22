@@ -3,9 +3,7 @@ package codegeneration;
 import ast.program.FunctionDefinition;
 import ast.program.Program;
 import ast.program.VariableDefinition;
-import ast.statements.AssignmentStatement;
-import ast.statements.ReadStatement;
-import ast.statements.WriteStatement;
+import ast.statements.*;
 import ast.type.FunctionType;
 
 public class ExecuteCGVisitor extends AbstractCGVisitor<Void,Void> {
@@ -33,7 +31,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,Void> {
         ID <:>
         ' * Parameters:
         execute[[type]]
-        ' * Local variables:
+        <' * Local variables:>
         definition*.forEach(vd -> execute[[vd]])
         int bytesLocals = definition*.isEmpty() ? 0 :
             -definition*.get(definition*.size()-1).offset;
@@ -43,14 +41,41 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,Void> {
 
 
      execute[[Program: program -> definition*]] =
-        ' * Global variables:
+        <' * Global variables:>
         definition*.filter(vd instanceof VariableDefinition)
                    .forEach(vd -> execute[[vd]])
-        ' Invocation to the main function
+        <' Invocation to the main function>
         <call> main
         <halt>
         definition*.filter(fd instanceof FunctionDefinition)
                    .forEach(fd -> execute[[fd]])
+
+
+     execute[[While statement -> expression statement* ]]=
+        String conditionLabel = cg.nextLabel(),
+                exitLabel = cg.nextLabel();
+        conditionLabel<:>
+        value [[expression]]
+        <jz > exitLabel
+        <' * Body of the while statement>
+        statement*.forEach(stmt -> execute[[stmt]])
+        <jmp > conditionLabel
+        exitLabel<:>
+
+
+     execute[[IfElseStatement statement -> expression statement1* statement2*]]=
+        String elseLabel = cg.nextLabel(),
+                exitLabel = cg.nextLabel();
+         value[[expression]]
+         <jz > elseLabel
+         <' * Body of the if branch>
+         statement2*.forEach(stmt -> execute[[stmt]])
+         <jmp > exitLabel
+         elseLabel<:>
+         <' * Body of the else branch>
+         statement1*.forEach(stmt -> execute[[stmt]])
+         exitLabel<:>
+
      */
 
 
@@ -62,6 +87,42 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,Void> {
         this.cg = cg;
         this.valueCGVisitor = valueCGVisitor;
         this.addressCGVisitor = addressCGVisitor;
+
+    }
+
+    @Override
+    public Void visit(IfElseStatement ifElseStatement, Void param) {
+        cg.nextLabel();
+        String elseLabel = cg.getCurrentLabel();
+        cg.nextLabel();
+        String exitLabel = cg.getCurrentLabel();
+        ifElseStatement.getConditionExpression().accept(valueCGVisitor, null);
+        cg.jump("jz", elseLabel);
+        cg.comment("' * Body of the if branch");
+        ifElseStatement.getIfBody().forEach(s -> s.accept(this, null));
+        cg.jump("jmp", exitLabel);
+        cg.commentLabel(elseLabel);
+        cg.comment("' * Body of the else branch");
+        ifElseStatement.getElseBody().forEach(s -> s.accept(this, null));
+        cg.commentLabel(exitLabel);
+
+        return null;
+    }
+
+    @Override
+    public Void visit(WhileStatement whileStatement, Void param) {
+        cg.nextLabel();
+        String conditionLabel = cg.getCurrentLabel();
+        cg.nextLabel();
+        String exitLabel = cg.getCurrentLabel();
+        cg.commentLabel(conditionLabel);
+        whileStatement.getCondition().accept(valueCGVisitor, null);
+        cg.jump("jz", exitLabel);
+        cg.comment("' * Body of the while statement");
+        whileStatement.getBody().forEach(s -> s.accept(this, null));
+        cg.jump("jmp", conditionLabel);
+        cg.commentLabel(exitLabel);
+        return null;
     }
 
     @Override
