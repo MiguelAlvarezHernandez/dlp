@@ -1,7 +1,9 @@
 package codegeneration;
 
+import ast.expressions.FieldAccessExpression;
 import ast.expressions.IndexExpression;
 import ast.expressions.VariableExpression;
+import ast.type.IntType;
 
 public class AddressCGVisitor extends AbstractCGVisitor<Void,Void>{
 
@@ -30,16 +32,28 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void,Void>{
 
 
     private final CodeGenerator cg;
-
+    private ValueCGVisitor valueCGVisitor;
 
     public AddressCGVisitor(CodeGenerator cg) {
         this.cg = cg;
     }
 
     @Override
+    public Void visit(FieldAccessExpression fieldAccess, Void param) {
+        fieldAccess.getRecord().accept(this,null);
+        cg.push( fieldAccess.getRecord().getType().findField(fieldAccess.getField()).getOffset());
+        //cg.add(fieldAccess.getRecord().getType());
+        cg.add(new IntType());
+        return null;
+    }
+
+    @Override
     public Void visit(IndexExpression var, Void param) {
         var.getArray().accept(this,null);
-
+        var.getIndex().accept(valueCGVisitor,null);
+        cg.push( var.getType().numberOfBytes());
+        cg.mul(new IntType());
+        cg.add(new IntType());
         return null;
     }
 
@@ -50,8 +64,12 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void,Void>{
         } else {
             cg.pushBP();
             cg.push(var.getDefinition().getOffset());
-            cg.add(var.getType());
+            cg.add(new IntType());
         }
         return null;
+    }
+
+    public void setValueCGVisitor(ValueCGVisitor valueCGVisitor) {
+        this.valueCGVisitor = valueCGVisitor;
     }
 }

@@ -39,5 +39,7 @@ public interface Type extends ASTNode {
     String suffix();
 
     Type superType(Type type);
+
+    RecordField findField(String field);
 }
 

@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 public class CodeGenerator {
 
     private PrintWriter out;
-    private int numberLabel;
+    private int numberLabel = -1;
 
     public CodeGenerator(String outputFilename) {
         try {
@@ -43,7 +43,7 @@ public class CodeGenerator {
     }
 
     public void add(Type type) {
-        out.println("\taddi");
+        out.println("\tadd" + type.suffix());
     }
 
     public void load(Type type) {
@@ -59,7 +59,7 @@ public class CodeGenerator {
     }
 
     public void in(Type type) {
-        out.println("\tinf");
+        out.println("\tin" +type.suffix());
     }
 
     public void ret(int returnBytes, int localBytes, int paramBytes) {
@@ -151,9 +151,9 @@ public class CodeGenerator {
 
     private void convertIntTo(Type targetType) {
         if (targetType instanceof DoubleType) {
-            out.println("\tint2float");
+            out.println("\ti2f");
         } else if (targetType instanceof CharType) {
-            out.println("\tint2char");
+            out.println("\ti2b");
         } else {
             throw new IllegalArgumentException("Cannot convert int to " + targetType.getClass().getSimpleName());
         }
@@ -161,9 +161,9 @@ public class CodeGenerator {
 
     private void convertRealTo(Type targetType) {
         if (targetType instanceof IntType) {
-            out.println("\tfloat2int");
+            out.println("\tf2i");
         } else if (targetType instanceof CharType) {
-            out.println("\tfloat2char");
+            out.println("\tf2b");
         } else {
             throw new IllegalArgumentException("Cannot convert float to " + targetType.getClass().getSimpleName());
         }
@@ -171,9 +171,9 @@ public class CodeGenerator {
 
     private void convertCharTo(Type targetType) {
         if (targetType instanceof IntType) {
-            out.println("\tchar2int");
+            out.println("\tb2i");
         } else if (targetType instanceof DoubleType) {
-            out.println("\tchar2float");
+            out.println("\tb2f");
         } else {
             throw new IllegalArgumentException("Cannot convert char to " + targetType.getClass().getSimpleName());
         }
@@ -189,9 +189,9 @@ public class CodeGenerator {
 
     public void jump(String jumpType, String label) {
         switch (jumpType) {
-            case "jmp": out.println("\tjmp label"); break;
-            case "jz": out.println("\tjz label"); break;
-            case "jnz": out.println("\tjnz label"); break;
+            case "jmp": out.println("\tjmp " + label); break;
+            case "jz": out.println("\tjz "+ label); break;
+            case "jnz": out.println("\tjnz "+ label); break;
             default: throw new IllegalArgumentException("It is not supported this type of jump");
 
 
@@ -200,5 +200,9 @@ public class CodeGenerator {
 
     public void commentLabel(String exitLabel) {
         out.println(exitLabel +":");
+    }
+
+    public void mul(Type type) {
+        out.println("\tmul" + type.suffix());
     }
 }

@@ -97,4 +97,10 @@ public abstract class AbstractType implements Type{
         return null;
     }
 
+    @Override
+    public RecordField findField(String field){
+        return null;
+    }
+
+
 }

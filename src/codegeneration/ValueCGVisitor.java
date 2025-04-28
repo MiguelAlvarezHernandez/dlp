@@ -111,13 +111,19 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void,Void>{
 
     @Override
     public Void visit(CharLiteralExpression charLiteral, Void param) {
-        cg.push((int) charLiteral.getValue());
+        cg.push(charLiteral.getValue());
         return null;
     }
 
     @Override
     public Void visit(RealLiteralExpression realLiteral, Void param) {
         cg.push(realLiteral.getValue());
+        return null;
+    }
+
+    @Override
+    public Void visit(IntLiteralExpression intLiteral, Void param) {
+        cg.push(intLiteral.getValue());
         return null;
     }
 
@@ -152,12 +158,15 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void,Void>{
     @Override
     public Void visit(ModuleExpression modExp, Void param) {
         modExp.getLeft().accept(this, param);
+        cg.convert(modExp.getType(), modExp.getLeft().getType());
         modExp.getRight().accept(this, param);
+        cg.convert(modExp.getType(), modExp.getLeft().getType());
 
-        cg.modulus(modExp.getLeft().getType().suffix());
+        cg.modulus(modExp.getType().suffix());
 
         return null;
     }
+
 
     @Override
     public Void visit(RelationalExpression relationalExp, Void param) {

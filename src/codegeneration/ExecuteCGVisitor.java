@@ -98,11 +98,11 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,Void> {
         String exitLabel = cg.getCurrentLabel();
         ifElseStatement.getConditionExpression().accept(valueCGVisitor, null);
         cg.jump("jz", elseLabel);
-        cg.comment("' * Body of the if branch");
+        cg.comment("* Body of the if branch");
         ifElseStatement.getIfBody().forEach(s -> s.accept(this, null));
         cg.jump("jmp", exitLabel);
         cg.commentLabel(elseLabel);
-        cg.comment("' * Body of the else branch");
+        cg.comment("* Body of the else branch");
         ifElseStatement.getElseBody().forEach(s -> s.accept(this, null));
         cg.commentLabel(exitLabel);
 
@@ -118,7 +118,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,Void> {
         cg.commentLabel(conditionLabel);
         whileStatement.getCondition().accept(valueCGVisitor, null);
         cg.jump("jz", exitLabel);
-        cg.comment("' * Body of the while statement");
+        cg.comment("* Body of the while statement");
         whileStatement.getBody().forEach(s -> s.accept(this, null));
         cg.jump("jmp", conditionLabel);
         cg.commentLabel(exitLabel);
@@ -189,6 +189,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,Void> {
     public Void visit(ReadStatement read, Void param) {
         read.getValueToRead().accept(addressCGVisitor, null);
         cg.in(read.getValueToRead().getType());
+        System.out.println(read.getValueToRead().getType());
         cg.store(read.getValueToRead().getType());
         return null;
     }

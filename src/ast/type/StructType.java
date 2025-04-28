@@ -5,6 +5,7 @@ import semantic.Visitor;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class StructType extends AbstractType {
@@ -59,5 +60,18 @@ public class StructType extends AbstractType {
     @Override
     public int numberOfBytes() {
         return this.getRecordFields().stream().mapToInt(rf-> rf.getFieldType().numberOfBytes()).sum();
+    }
+
+    @Override
+    public RecordField findField(String field) {
+        return Objects.requireNonNull(recordFields.stream()
+                .filter(f -> f.getName().equals(field))
+                .findFirst()
+                .orElse(null));
+    }
+
+    @Override
+    public String suffix(){
+        return "i";
     }
 }

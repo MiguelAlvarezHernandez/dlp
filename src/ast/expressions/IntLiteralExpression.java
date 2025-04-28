@@ -5,7 +5,7 @@ import semantic.Visitor;
 public class IntLiteralExpression extends AbstractExpression {
     private int value;
 
-    public IntLiteralExpression(int value, int line, int column) {
+    public IntLiteralExpression(int line, int column, int value) {
         super(line, column);
         this.value = value;
     }
