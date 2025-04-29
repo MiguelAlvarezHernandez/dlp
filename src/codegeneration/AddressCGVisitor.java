@@ -52,7 +52,7 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void,Void>{
         var.getArray().accept(this,null);
         var.getIndex().accept(valueCGVisitor,null);
         cg.push( var.getType().numberOfBytes());
-        cg.mul(null);
+        cg.muli();
         cg.addi();
         return null;
     }

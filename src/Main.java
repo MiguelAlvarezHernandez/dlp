@@ -63,7 +63,7 @@ public class Main {
 			new IntrospectorView("Introspector", model);
 
 
-			CodeGenerator cg = new CodeGenerator("output.txt");
+			CodeGenerator cg = new CodeGenerator("big-output.txt");
 			AddressCGVisitor addressVisitor = new AddressCGVisitor(cg);
 			ValueCGVisitor valueVisitor = new ValueCGVisitor(cg, addressVisitor);
 			ExecuteCGVisitor executeVisitor = new ExecuteCGVisitor(cg, valueVisitor, addressVisitor);

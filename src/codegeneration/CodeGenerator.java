@@ -209,14 +209,16 @@ public class CodeGenerator {
     }
 
     public void mul(Type type) {
-        if (type == null) {
-            out.println("\tmul" + new IntType().suffix());
-        }else {
-            out.println("\tmul" + type.suffix());
-        }
+
+        out.println("\tmul" + type.suffix());
+
     }
 
     public void pop(String suffix) {
         out.println("\tpop" + suffix);
+    }
+
+    public void muli() {
+        out.println("\tmuli");
     }
 }
