@@ -1,245 +1,194 @@
 	' Global variables:
-	' * ArrayType{size=10, elementType=DoubleType} v (offset 0)
+	' * IntType i (offset 0)
+	' * IntType n (offset 2)
+	' * IntType j (offset 4)
+	' * CharType c (offset 6)
+	' * StructType{recordFields=[RecordField{fieldType=IntType, name='integer'}, RecordField{fieldType=CharType, name='character'}]} pair (offset 7)
+	' * ArrayType{size=10, elementType=ArrayType{size=10, elementType=IntType}} matrix (offset 10)
 	' Invocation to the main function
 	call	main
 	halt
-main:
+p:
 	' * Parameters:
 	' * Local variables:
-	' * DoubleType value (offset -4)
-	' * IntType i (offset -6)
-	' * IntType j (offset -8)
-	' * ArrayType{size=4, elementType=ArrayType{size=5, elementType=IntType}} w (offset -48)
-	' * StructType{recordFields=[RecordField{fieldType=IntType, name='day'}, RecordField{fieldType=IntType, name='month'}, RecordField{fieldType=IntType, name='year'}]} date (offset -54)
-	enter	54
+	enter	0
+	ret	0, 0, 0
+f:
+	' * Parameters:
+	' * DoubleType r (offset 6)
+	' * IntType e (offset 4)
+	' * Local variables:
+	' * DoubleType real (offset -4)
+	' * CharType c (offset -5)
+	enter	5
 	push	bp
-	pushi	-54
+	pushi	-4
 	addi
-	pushi	0
+	pusha	7
+	pushi	2
 	addi
-	ini
-	storei
-	push	bp
-	pushi	-54
-	addi
-	pushi	4
-	addi
-	pushb	97
+	loadb
 	b2i
-	storei
-	push	bp
-	pushi	-54
-	addi
-	pushi	2
-	addi
-	push	bp
-	pushi	-54
-	addi
+	i2f
+	pusha	7
 	pushi	0
 	addi
 	loadi
+	i2f
+	addf
 	push	bp
-	pushi	-54
+	pushi	6
 	addi
-	pushi	4
-	addi
-	loadi
-	muli
-	pushi	12
-	modi
-	pushi	1
-	addi
-	storei
+	loadf
+	addf
 	push	bp
-	pushi	-54
-	addi
-	pushi	0
-	addi
-	loadi
-	outi
-	pushb	10
-	outb
-	push	bp
-	pushi	-54
-	addi
-	pushi	2
-	addi
-	loadi
-	outi
-	pushb	10
-	outb
-	push	bp
-	pushi	-54
-	addi
 	pushi	4
 	addi
 	loadi
 	i2f
-	outf
-	pushb	10
-	outb
-	push	bp
-	pushi	-4
-	addi
-	inf
+	addf
 	storef
 	push	bp
-	pushi	-6
+	pushi	-5
+	addi
+	pushb	48
+	storeb
+	push	bp
+	pushi	-5
+	addi
+	loadb
+	b2i
+	ret	2, 5, 6
+fill:
+	' * Parameters:
+	' * IntType row (offset 8)
+	' * IntType value (offset 6)
+	' * IntType increment (offset 4)
+	' * Local variables:
+	' * IntType i (offset -2)
+	' * IntType inc (offset -4)
+	enter	4
+	push	bp
+	pushi	-2
 	addi
 	pushi	0
 	storei
+	push	bp
+	pushi	-4
+	addi
+	push	bp
+	pushi	4
+	addi
+	loadi
+	storei
 label0:
 	push	bp
-	pushi	-6
+	pushi	-2
 	addi
 	loadi
 	pushi	10
 	lti
 	jz label1
 	' * Body of the while statement
-	pusha	0
+	pusha	10
 	push	bp
-	pushi	-6
+	pushi	8
 	addi
 	loadi
-	pushi	4
+	pushi	20
 	muli
+	addi
+	push	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	2
+	muli
+	addi
+	push	bp
+	pushi	6
+	addi
+	loadi
+	push	bp
+	pushi	-4
+	addi
+	loadi
+	addi
+	storei
+	push	bp
+	pushi	-2
+	addi
+	push	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	1
+	addi
+	storei
+	push	bp
+	pushi	-4
 	addi
 	push	bp
 	pushi	-4
 	addi
-	loadf
-	storef
-	push	bp
-	pushi	-6
-	addi
 	loadi
-	outi
-	pushb	58
-	outb
-	pusha	0
 	push	bp
-	pushi	-6
-	addi
-	loadi
 	pushi	4
-	muli
-	addi
-	loadf
-	outf
-	pushb	32
-	outb
-	push	bp
-	pushi	-6
 	addi
 	loadi
-	pushi	2
-	modi
-	jz label2
-	' * Body of the if branch
-	pushb	111
-	outb
-	pushb	100
-	outb
-	pushb	100
-	outb
-	pushb	10
-	outb
-	jmp label3
-label2:
-	' * Body of the else branch
-	pushb	101
-	outb
-	pushb	118
-	outb
-	pushb	101
-	outb
-	pushb	110
-	outb
-	pushb	10
-	outb
-label3:
-	push	bp
-	pushi	-6
-	addi
-	push	bp
-	pushi	-6
-	addi
-	loadi
-	pushi	1
 	addi
 	storei
 	jmp label0
 label1:
-	pushb	10
+	ret	0, 4, 6
+show:
+	' * Parameters:
+	' * IntType row (offset 4)
+	' * Local variables:
+	' * IntType i (offset -2)
+	enter	2
+	push	bp
+	pushi	-2
+	addi
+	pushi	0
+	storei
+label2:
+	push	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	10
+	lti
+	jz label3
+	' * Body of the while statement
+	pushb	40
 	outb
 	push	bp
-	pushi	-6
-	addi
-	pushi	0
-	storei
-label4:
-	push	bp
-	pushi	-6
-	addi
-	loadi
 	pushi	4
-	lti
-	jz label5
-	' * Body of the while statement
-	push	bp
-	pushi	-8
-	addi
-	pushi	0
-	storei
-label6:
-	push	bp
-	pushi	-8
 	addi
 	loadi
-	pushi	5
-	lti
-	jz label7
-	' * Body of the while statement
+	outi
+	pushb	44
+	outb
 	push	bp
-	pushi	-48
-	addi
-	push	bp
-	pushi	-6
+	pushi	-2
 	addi
 	loadi
-	pushi	10
+	outi
+	pushb	41
+	outb
+	pushb	58
+	outb
+	pusha	10
+	push	bp
+	pushi	4
+	addi
+	loadi
+	pushi	20
 	muli
 	addi
 	push	bp
-	pushi	-8
-	addi
-	loadi
-	pushi	2
-	muli
-	addi
-	push	bp
-	pushi	-6
-	addi
-	loadi
-	push	bp
-	pushi	-8
-	addi
-	loadi
-	addi
-	storei
-	push	bp
-	pushi	-48
-	addi
-	push	bp
-	pushi	-6
-	addi
-	loadi
-	pushi	10
-	muli
-	addi
-	push	bp
-	pushi	-8
+	pushi	-2
 	addi
 	loadi
 	pushi	2
@@ -250,29 +199,108 @@ label6:
 	pushb	32
 	outb
 	push	bp
-	pushi	-8
+	pushi	-2
 	addi
 	push	bp
-	pushi	-8
+	pushi	-2
 	addi
 	loadi
 	pushi	1
 	addi
 	storei
-	jmp label6
-label7:
+	jmp label2
+label3:
 	pushb	10
 	outb
+	ret	0, 2, 2
+main:
+	' * Parameters:
+	' * Local variables:
+	' * IntType i (offset -2)
+	enter	2
+	call	p
 	push	bp
-	pushi	-6
+	pushi	-2
+	addi
+	pushi	0
+	storei
+	pusha	7
+	pushi	2
+	addi
+	pushb	48
+	storeb
+	pusha	7
+	pushi	0
+	addi
+	pushb	48
+	b2i
+	storei
+	push	bp
+	pushi	-2
+	addi
+	loadi
+	i2f
+	pusha	7
+	pushi	2
+	addi
+	loadb
+	b2i
+	call	f
+	outi
+	pushb	10
+	outb
+	pushf	1.3
+	pushi	2
+	call	f
+	popi
+	push	bp
+	pushi	-2
+	addi
+	pushi	0
+	storei
+	pusha	4
+	pushi	0
+	storei
+label4:
+	push	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	10
+	lti
+	jz label5
+	' * Body of the while statement
+	push	bp
+	pushi	-2
+	addi
+	loadi
+	pusha	4
+	loadi
+	pushi	1
+	call	fill
+	push	bp
+	pushi	-2
+	addi
+	loadi
+	call	show
+	push	bp
+	pushi	-2
 	addi
 	push	bp
-	pushi	-6
+	pushi	-2
 	addi
 	loadi
 	pushi	1
 	addi
+	storei
+	pusha	4
+	push	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	10
+	muli
 	storei
 	jmp label4
 label5:
-	ret	0, 54, 0
+	ret	0, 2, 0

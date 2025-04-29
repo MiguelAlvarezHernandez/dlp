@@ -44,6 +44,10 @@ public class CodeGenerator {
 
     public void add(Type type) {
         out.println("\tadd" + type.suffix());
+
+    }
+    public void addi() {
+        out.println("\taddi");
     }
 
     public void load(Type type) {
@@ -163,7 +167,8 @@ public class CodeGenerator {
         if (targetType instanceof IntType) {
             out.println("\tf2i");
         } else if (targetType instanceof CharType) {
-            out.println("\tf2b");
+            out.println("\tf2i");
+            out.println("\ti2b");
         } else {
             throw new IllegalArgumentException("Cannot convert float to " + targetType.getClass().getSimpleName());
         }
@@ -173,7 +178,8 @@ public class CodeGenerator {
         if (targetType instanceof IntType) {
             out.println("\tb2i");
         } else if (targetType instanceof DoubleType) {
-            out.println("\tb2f");
+            out.println("\tb2i");
+            out.println("\ti2f");
         } else {
             throw new IllegalArgumentException("Cannot convert char to " + targetType.getClass().getSimpleName());
         }
@@ -203,6 +209,14 @@ public class CodeGenerator {
     }
 
     public void mul(Type type) {
-        out.println("\tmul" + type.suffix());
+        if (type == null) {
+            out.println("\tmul" + new IntType().suffix());
+        }else {
+            out.println("\tmul" + type.suffix());
+        }
+    }
+
+    public void pop(String suffix) {
+        out.println("\tpop" + suffix);
     }
 }

@@ -43,7 +43,7 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void,Void>{
         fieldAccess.getRecord().accept(this,null);
         cg.push( fieldAccess.getRecord().getType().findField(fieldAccess.getField()).getOffset());
         //cg.add(fieldAccess.getRecord().getType());
-        cg.add(new IntType());
+        cg.addi();
         return null;
     }
 
@@ -52,8 +52,8 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void,Void>{
         var.getArray().accept(this,null);
         var.getIndex().accept(valueCGVisitor,null);
         cg.push( var.getType().numberOfBytes());
-        cg.mul(new IntType());
-        cg.add(new IntType());
+        cg.mul(null);
+        cg.addi();
         return null;
     }
 
@@ -64,7 +64,7 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void,Void>{
         } else {
             cg.pushBP();
             cg.push(var.getDefinition().getOffset());
-            cg.add(new IntType());
+            cg.addi();
         }
         return null;
     }
