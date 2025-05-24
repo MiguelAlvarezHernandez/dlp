@@ -135,7 +135,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Type>{
         for(Expression expr: functionInvocation.getArguments()){
             expr.accept(this, param);
         }
-        functionInvocation.setLValue(true);
+        functionInvocation.setLValue(false);
 
         Type functionType = functionInvocation.getVariable().getType();
         List<Type> argTypes = functionInvocation.getArguments().stream()

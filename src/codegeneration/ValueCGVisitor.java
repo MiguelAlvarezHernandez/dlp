@@ -121,6 +121,14 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void,Void>{
 
         return null;
     }
+    @Override
+    public Void visit(NegationExpression negExp, Void param) {
+        negExp.getExpression().accept(this, param);
+
+        cg.not();
+
+        return null;
+    }
 
     @Override
     public Void visit(CharLiteralExpression charLiteral, Void param) {

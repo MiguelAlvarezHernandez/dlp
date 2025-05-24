@@ -221,4 +221,7 @@ public class CodeGenerator {
     public void muli() {
         out.println("\tmuli");
     }
+
+    public void not() {out.println("\tnot");
+    }
 }
