@@ -95,7 +95,7 @@ public class IntType extends AbstractType {
         if(type instanceof ErrorType) {
             return this;
         }
-        return super.arithmetic(type, locatable);
+        return super.assignment(type, locatable);
     }
 
     @Override
