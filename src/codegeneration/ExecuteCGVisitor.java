@@ -104,6 +104,8 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,DtoBytes> {
 
     @Override
     public Void visit(ReturnStatement returnStatement, DtoBytes param) {
+        cg.comment("line\t"+ returnStatement.getLine());
+
         returnStatement.getReturnValue().accept(valueCGVisitor, null);
         cg.ret(param.bytesReturn(), param.bytesLocals(), param.bytesParams());
         return null;
@@ -111,6 +113,9 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,DtoBytes> {
 
     @Override
     public Void visit(FunctionInvocation functionInvocation, DtoBytes param) {
+        cg.comment("line\t"+ functionInvocation.getLine());
+
+
         functionInvocation.getArguments().forEach(exp -> exp.accept(valueCGVisitor, null));
         cg.call(functionInvocation.getVariable().getName());
         if(!(((FunctionType)functionInvocation.getVariable().getType()).getReturnType() instanceof VoidType))
@@ -120,6 +125,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,DtoBytes> {
 
     @Override
     public Void visit(IfElseStatement ifElseStatement, DtoBytes param) {
+        cg.comment("line\t"+ ifElseStatement.getLine());
         cg.nextLabel();
         String elseLabel = cg.getCurrentLabel();
         cg.nextLabel();
@@ -139,6 +145,8 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,DtoBytes> {
 
     @Override
     public Void visit(WhileStatement whileStatement, DtoBytes param) {
+        cg.comment("line\t"+ whileStatement.getLine());
+
         cg.nextLabel();
         String conditionLabel = cg.getCurrentLabel();
         cg.nextLabel();
@@ -209,6 +217,8 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,DtoBytes> {
 
     @Override
     public Void visit(AssignmentStatement assignment, DtoBytes param) {
+        cg.comment("line\t"+ assignment.getLine());
+
         assignment.getLeft().accept(addressCGVisitor, null);
         assignment.getRight().accept(valueCGVisitor, null);
         cg.store(assignment.getLeft().getType());
@@ -217,6 +227,8 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,DtoBytes> {
 
     @Override
     public Void visit(ReadStatement read, DtoBytes param) {
+        cg.comment("line\t"+ read.getLine());
+
         read.getValueToRead().accept(addressCGVisitor, null);
         cg.in(read.getValueToRead().getType());
         System.out.println(read.getValueToRead().getType());
@@ -226,6 +238,8 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,DtoBytes> {
 
     @Override
     public Void visit(WriteStatement write, DtoBytes param) {
+        cg.comment("line\t"+ write.getLine());
+
         write.getValueToWrite().accept(valueCGVisitor, null);
         cg.out(write.getValueToWrite().getType());
         return null;

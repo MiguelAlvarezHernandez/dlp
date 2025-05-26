@@ -106,6 +106,14 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void,Void>{
     }
 
     @Override
+    public Void visit(UnaryMinusExpression unaryMinusExpression, Void param) {
+        cg.push(0);
+        unaryMinusExpression.getExpression().accept(this, null);
+        cg.sub(unaryMinusExpression.getExpression().getType());
+        return null;
+    }
+
+    @Override
     public Void visit(FieldAccessExpression fieldAccessExpression, Void param) {
         addressCGVisitor.visit(fieldAccessExpression, param);
         cg.load(fieldAccessExpression.getType());

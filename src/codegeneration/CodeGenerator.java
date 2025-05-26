@@ -224,4 +224,9 @@ public class CodeGenerator {
 
     public void not() {out.println("\tnot");
     }
+
+    public void sub(Type type) {
+        out.println("\tsub" + type.suffix());
+
+    }
 }
