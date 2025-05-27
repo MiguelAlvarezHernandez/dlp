@@ -167,9 +167,11 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void,Void>{
     @Override
     public Void visit(ArithmeticExpression arithmeticExp, Void param) {
         arithmeticExp.getLeft().accept(this, param);
+        cg.convert(arithmeticExp.getType(), arithmeticExp.getLeft().getType());
+
         arithmeticExp.getRight().accept(this, param);
 
-        cg.convert(arithmeticExp.getType(), arithmeticExp.getLeft().getType());
+
         cg.convert(arithmeticExp.getType(), arithmeticExp.getRight().getType());
 
         cg.arithmetic(arithmeticExp.getOperator(), arithmeticExp.getType().suffix());
@@ -202,12 +204,14 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void,Void>{
         Type superType = relationalExp.getLeft().getType().superType(relationalExp.getRight().getType());
 
         relationalExp.getLeft().accept(this, param);
+        cg.convert(superType, relationalExp.getLeft().getType());
+
         relationalExp.getRight().accept(this, param);
 
-        cg.convert(superType, relationalExp.getLeft().getType());
+
         cg.convert(superType, relationalExp.getRight().getType());
 
-        cg.relational(relationalExp.getOperator(), relationalExp.getType().suffix());
+        cg.relational(relationalExp.getOperator(), superType.suffix());
 
         return null;
     }

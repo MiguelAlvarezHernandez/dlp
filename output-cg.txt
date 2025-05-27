@@ -1,0 +1,246 @@
+	' Global variables:
+	' * IntType i (offset 0)
+	' * IntType j (offset 2)
+	' * IntType n (offset 4)
+	' * CharType c (offset 6)
+	' Invocation to the main function
+	call	main
+	halt
+p:
+	' * Parameters:
+	' * Local variables:
+	enter	0
+	ret	0, 0, 0
+f:
+	' * Parameters:
+	' * IntType n (offset 8)
+	' * DoubleType r (offset 4)
+	' * Local variables:
+	' * DoubleType real (offset -4)
+	' * CharType c1 (offset -5)
+	' * CharType c2 (offset -6)
+	enter	6
+	push	bp
+	pushi	-5
+	addi
+	push	bp
+	pushi	8
+	addi
+	loadi
+	i2b
+	storeb
+	push	bp
+	pushi	-4
+	addi
+	push	bp
+	pushi	-5
+	addi
+	loadb
+	b2i
+	i2f
+	push	bp
+	pushi	8
+	addi
+	loadi
+	i2f
+	addf
+	push	bp
+	pushi	4
+	addi
+	loadf
+	addf
+	storef
+	call	p
+	push	bp
+	pushi	-5
+	addi
+	loadb
+	b2i
+	ret	2, 6, 6
+main:
+	' * Parameters:
+	' * Local variables:
+	' * StructType{recordFields=[RecordField{fieldType=IntType, name='integer'}, RecordField{fieldType=CharType, name='character'}]} pair (offset -3)
+	' * ArrayType{size=10, elementType=ArrayType{size=5, elementType=IntType}} vector (offset -103)
+	enter	103
+	pusha	0
+	pushi	0
+	storei
+	pusha	2
+	pushi	0
+	storei
+label0:
+	pusha	0
+	loadi
+	pushi	10
+	lti
+	jz label1
+	' * Body of the while statement
+label2:
+	pusha	2
+	loadi
+	pushi	5
+	lti
+	jz label3
+	' * Body of the while statement
+	push	bp
+	pushi	-103
+	addi
+	pusha	0
+	loadi
+	pushi	10
+	muli
+	addi
+	pusha	2
+	loadi
+	pushi	2
+	muli
+	addi
+	pusha	0
+	loadi
+	pusha	2
+	loadi
+	addi
+	storei
+	pusha	2
+	pusha	2
+	loadi
+	pushi	1
+	addi
+	storei
+	jmp label2
+label3:
+	pusha	0
+	pusha	0
+	loadi
+	pushi	1
+	addi
+	storei
+	jmp label0
+label1:
+	pusha	0
+	pushi	0
+	storei
+	push	bp
+	pushi	-3
+	addi
+	pushi	2
+	addi
+	pushb	48
+	storeb
+	push	bp
+	pushi	-3
+	addi
+	pushi	0
+	addi
+	pushi	48
+	storei
+label4:
+	push	bp
+	pushi	-3
+	addi
+	pushi	0
+	addi
+	loadi
+	pusha	0
+	loadi
+	gei
+	jz label5
+	' * Body of the while statement
+	push	bp
+	pushi	-3
+	addi
+	pushi	0
+	addi
+	loadi
+	push	bp
+	pushi	-103
+	addi
+	pushi	0
+	pushi	10
+	muli
+	addi
+	pushi	0
+	pushi	2
+	muli
+	addi
+	loadi
+	eqi
+	push	bp
+	pushi	-3
+	addi
+	pushi	2
+	addi
+	loadb
+	b2i
+	not
+	or
+	pusha	0
+	loadi
+	pushi	2
+	modi
+	pushi	0
+	eqi
+	or
+	jz label6
+	' * Body of the if branch
+	pushb	116
+	outb
+	pushb	114
+	outb
+	pushb	117
+	outb
+	pushb	101
+	outb
+	pushb	10
+	outb
+	jmp label7
+label6:
+	' * Body of the else branch
+	pushb	102
+	outb
+	pushb	97
+	outb
+	pushb	108
+	outb
+	pushb	115
+	outb
+	pushb	101
+	outb
+	pushb	10
+	outb
+label7:
+	pusha	0
+	pusha	0
+	loadi
+	pushi	1
+	addi
+	storei
+	jmp label4
+label5:
+	pusha	0
+	loadi
+	pusha	0
+	loadi
+	i2f
+	call	f
+	outi
+	push	bp
+	pushi	-103
+	addi
+	pushi	9
+	pushi	10
+	muli
+	addi
+	pushf	4.3
+	f2i
+	pushi	2
+	muli
+	addi
+	pushi	5
+	storei
+	pushi	1
+	pushf	2.2
+	call	f
+	popi
+	ret	0, 103, 0

@@ -231,7 +231,6 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void,DtoBytes> {
 
         read.getValueToRead().accept(addressCGVisitor, null);
         cg.in(read.getValueToRead().getType());
-        System.out.println(read.getValueToRead().getType());
         cg.store(read.getValueToRead().getType());
         return null;
     }

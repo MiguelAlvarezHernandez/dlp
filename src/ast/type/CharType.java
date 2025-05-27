@@ -1,6 +1,7 @@
 package ast.type;
 
 import ast.Locatable;
+import com.sun.jdi.IntegerType;
 import semantic.Visitor;
 
 public class CharType extends AbstractType{
@@ -18,7 +19,7 @@ public class CharType extends AbstractType{
     @Override
     public Type arithmetic(Type type, Locatable locatable) {
         if(type instanceof CharType) {
-            return this;
+            return new IntType();
         }
         if(type instanceof ErrorType) {
             return this;
@@ -102,6 +103,6 @@ public class CharType extends AbstractType{
         } else if (other instanceof IntType) {
             return new IntType();
         }
-        return this;
+        return new IntType();
     }
 }
