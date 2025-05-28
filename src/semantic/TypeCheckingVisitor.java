@@ -292,7 +292,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void,Type>{
         moduleExpression.getRight().accept(this, param);
         moduleExpression.setLValue(false);
 
-        Type resultType = moduleExpression.getLeft().getType().relational(
+        Type resultType = moduleExpression.getLeft().getType().modulus(
                 moduleExpression.getRight().getType(), moduleExpression);
         moduleExpression.setType(resultType);
 

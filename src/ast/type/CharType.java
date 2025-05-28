@@ -30,7 +30,7 @@ public class CharType extends AbstractType{
     @Override
     public Type modulus(Type type, Locatable locatable) {
         if(type instanceof CharType) {
-            return this;
+            return new IntType();
         }
         if(type instanceof ErrorType) {
             return this;
