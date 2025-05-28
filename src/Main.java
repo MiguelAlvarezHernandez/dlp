@@ -5,7 +5,7 @@ import codegeneration.CodeGenerator;
 import codegeneration.ExecuteCGVisitor;
 import codegeneration.ValueCGVisitor;
 import semantic.IdentificationVisitor;
-import semantic.OffsetVisitor;
+import codegeneration.OffsetVisitor;
 import semantic.TypeCheckingVisitor;
 import introspector.model.IntrospectorModel;
 import introspector.view.IntrospectorView;

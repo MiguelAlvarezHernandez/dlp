@@ -1,4 +1,4 @@
-package semantic;
+package codegeneration;
 
 import ast.program.FunctionDefinition;
 import ast.program.VariableDefinition;
@@ -6,8 +6,9 @@ import ast.statements.Statement;
 import ast.type.FunctionType;
 import ast.type.RecordField;
 import ast.type.StructType;
+import semantic.AbstractVisitor;
 
-public class OffsetVisitor extends AbstractVisitor<Void,Void>{
+public class OffsetVisitor extends AbstractVisitor<Void,Void> {
 
 
     //P: StructType: type -> field*
